@@ -68,7 +68,7 @@
 			
 		//Дальнейшие действия в зависимости от пришедшей команды в запросе (см. список команд  в udp_send.php)
 			
-			if ($udp_package['cmd'] = 30){ //запуск функции присвоения значениея свойства объекта
+			if ($udp_package['cmd'] == 30){ //запуск функции присвоения значениея свойства объекта
 			
 			
 				if ($this->config['API_LOG_DEBMES']) {
@@ -102,7 +102,11 @@
 				
 			}
 			
-			if ($udp_package['cmd'] = 13){ // Получение серийного номера шлюза и версии прошивки
+			if ($udp_package['cmd'] == 13){ // Получение серийного номера шлюза и версии прошивки
+			
+				if ($this->config['API_LOG_DEBMES']) {
+					DebMes(date("H:i:s") . " запуск функции получения информации о шлюзе" . PHP_EOL, 'okbit');
+				}
 			
 				if ($this->config['API_LOG_DEBMES']) {
 					DebMes(date("H:i:s") . ' VER: ' . $udp_package['vol_1'] . '.' . $udp_package['vol_2'] . ' SN: ' . $udp_package['vol_3'] . '0000' . $udp_package['vol_4'] . PHP_EOL, 'okbit');
