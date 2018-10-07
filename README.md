@@ -1,4 +1,3 @@
-# Mudul_UDP
-Modul for Majordomo OkBit.ru
+# Modul for Majordomo OkBit.ru
 
 Пробую первые шаги на GitHub
