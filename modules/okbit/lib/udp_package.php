@@ -29,9 +29,12 @@
 			"to_id"=> hexdec($arr[19]),
 		 );
 		 
+		 
 		if ($this->config['API_LOG_DEBMES']) {
-					DebMes(date("H:i:s") . $udp_package['cmd'] . PHP_EOL, 'okbit');
+					DebMes(date("H:i:s") . "  " . $udp_package['cmd'] . PHP_EOL, 'okbit');
 				}
+				
+				
 		 
 		if ($udp_package['length'] == 11 || $udp_package['length'] == 13 || $udp_package['length'] == 15 || $udp_package['length'] == 17) {
 			$udp_package['vol_1'] = hexdec($arr[20] . $arr[21]);
