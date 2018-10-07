@@ -69,6 +69,10 @@
 		//Дальнейшие действия в зависимости от пришедшей команды в запросе (см. список команд  в udp_send.php)
 			
 			if ($udp_package['cmd'] = 30){ //запуск функции присвоения значениея свойства объекта
+			
+			
+				if ($this->config['API_LOG_DEBMES']) {
+					DebMes(date("H:i:s") . " запуск функции присвоения значениея свойства объекта " . PHP_EOL, 'okbit');
 				
 			
 				$cmd_gate = SQLSelectOne("SELECT * FROM `okbit_gate` WHERE IP='".DBSafe($gate_ip)."'");
