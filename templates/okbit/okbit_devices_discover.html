@@ -1,0 +1,28 @@
+<!-- Table 'miio_devices' edit -->
+<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+	<fieldset>
+	
+	[#if OK#]
+	<div class="alert alert-success"><#LANG_DATA_SAVED#></div>
+	[#endif OK#]
+	
+	[#if ERR#]
+	<div class="alert alert-error"><#LANG_FILLOUT_REQURED#></div>
+	[#endif ERR#]
+	
+	
+				
+		<div class="form-group">
+			<label class="col-lg-8" style="font-weight:bold">
+				В данном разделе будет осуществляться автоматический поиск подулей на шлюзе - "<#PARENT_TITLE#>"
+			</label>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-lg-offset-3 col-lg-4">
+				<a href="?data_source=okbit_devices&view_mode=search_okbit_devices&parent_id=<#PARENT_ID#>&parent_title=<#PARENT_TITLE#>" class="btn btn-default "><#LANG_STRING_BACK#></a>
+
+			</div>
+		</div>
+	</fieldset>
+</form>

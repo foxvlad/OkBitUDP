@@ -1,0 +1,98 @@
+
+	<legend><#PARENT_TITLE#></legend>
+	
+	
+<p>
+	<a href="?data_source=okbit_devices&view_mode=edit_okbit_devices&parent_title=<#PARENT_TITLE#>&parent_id=<#PARENT_ID#>" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>   <#LANG_OKBIT_APP_ADD_DEVICE#></a>
+	<a href="?data_source=okbit_devices&view_mode=devices_discover&parent_title=<#PARENT_TITLE#>&parent_id=<#PARENT_ID#>" class="btn btn-default"><i class="glyphicon glyphicon-search"></i> <#LANG_OKBIT_APP_FIND_DEVICES#></a>
+	<a href="?data_source=" class="btn btn-default "><#LANG_STRING_BACK#></a>
+</p>
+
+
+<table  align=center class="table table-striped">
+	<tbody>
+	
+		<tr style="height:52px" class="hover_btn2" >
+			<td class="zag"><#LANG_OKBIT_TITLE#></td>
+			<td class="zag">&nbsp;</td>
+			<td class="zag"><#LANG_OKBIT_SUB_ID#></td>
+			<td class="zag"><#LANG_OKBIT_DEVICE#></td>
+			<td class="zag"><#LANG_OKBIT_TIPE_DEVICE#></td>
+			<td class="zag"><#LANG_OKBIT_VER#></td>
+			<td class="zag"><#LANG_OKBIT_STATUS#></td>
+			<td class="zag">&nbsp;</td>
+		</tr>
+		
+		
+		[#begin RES_DEVICES#]
+
+		<tr style="height:52px" class="hover_btn2">
+		
+		<td style="vertical-align:middle">
+			<b>[#TITLE#]<b>
+		</td>
+		
+		
+		<td style="vertical-align:middle">
+
+			<img src="../templates/okbit/img/[#DEVICE#].png"  width="30" height="30">
+
+		</td>
+		
+		<td style="vertical-align:middle">
+
+			[#SUB_ID#]
+
+		</td>
+		
+		
+		<td style="vertical-align:middle">
+
+			[#DEVICE_ID#]
+
+		</td>
+		
+		<td style="vertical-align:middle">
+			[#DEVICE_NAME#]
+		</td>
+		 
+	 
+		<td style="vertical-align:middle">
+			[#if VER!=""#]
+				[#VER#]
+			[#else#]
+				&nbsp;
+			[#endif#]
+		</td>
+		
+		
+		<td style="vertical-align:middle">
+		
+			[#if STATUS==1#]
+				<span class="label label-success" title="Устройство в сети">Online</span>
+			[#else#]
+				<span class="label label-warning" title="Устройство не доступно">Offline</span>
+			[#endif#]
+
+		</td>
+		
+		
+		<td style="vertical-align:middle" width="1%" nowrap>
+			<div style="width:130px">
+			[#if "<#ACTION#>"=="admin"#]
+				<a href="?data_source=okbit_devices&view_mode=propupd_okbit_gate&id=[#ID#]" class="btn btn-default [#if STATUS==0#]disabled[#endif#]" title="Получить актуальное версию прошивки"><i class="glyphicon glyphicon-refresh"></i></a>
+				
+				<a href="?data_source=okbit_devices&view_mode=edit_okbit_devices&parent_title=<#PARENT_TITLE#>&parent_id=[#PARENT_ID#]&id=[#ID#]" class="btn btn-default" title="Редактировать"><i class="glyphicon glyphicon-pencil"></i></a>
+				
+				<a href="?data_source=okbit_devices&view_mode=delete_okbit_devices&id=[#ID#]&parent_title=<#PARENT_TITLE#>&parent_id=<#PARENT_ID#>" onClick="return confirm('Вы уверены? Пожалуйста, подтвердите.')" class="btn btn-default" title="Удалить"><i class="glyphicon glyphicon-remove"></i></a>
+			[#endif ACTION#]
+			</div>
+		</td>
+		 
+		 
+		</tr>
+
+		[#end RES_DEVICES#]
+
+	</tbody>
+</table>
