@@ -30,10 +30,7 @@
 		 );
 		 
 		 
-		if ($this->config['API_LOG_DEBMES']) {
-					DebMes(date("H:i:s") . "  " . $udp_package['cmd'] . PHP_EOL, 'okbit');
-				}
-				
+		
 				
 		 
 		if ($udp_package['length'] == 11 || $udp_package['length'] == 13 || $udp_package['length'] == 15 || $udp_package['length'] == 17) {
@@ -70,10 +67,6 @@
 			
 			if ($udp_package['cmd'] == 30){ //запуск функции присвоения значениея свойства объекта
 			
-			
-				if ($this->config['API_LOG_DEBMES']) {
-					DebMes(date("H:i:s") . " запуск функции присвоения значениея свойства объекта " . PHP_EOL, 'okbit');
-				}
 			
 				$cmd_gate = SQLSelectOne("SELECT * FROM `okbit_gate` WHERE IP='".DBSafe($gate_ip)."'");
 						
