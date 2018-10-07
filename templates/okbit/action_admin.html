@@ -1,0 +1,232 @@
+<style type="text/css">
+.zag {
+	vertical-align:middle!important;
+	background-color:#ced3f9!important;
+}
+
+
+</style>
+
+
+ <!-- DATA_SOURCE="okbit_gate -->
+ [#if DATA_SOURCE="okbit_gate" || DATA_SOURCE=""#]
+ <!-- table miio_devices search -->
+ [#if VIEW_MODE="search_gate_devices" || VIEW_MODE=""#]
+ 
+ 
+
+
+<div class="float-right" style="margin-top:20px; margin-right:20px;">
+	<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#about"><#LANG_OKBIT_APP_ABOUT#>&nbsp;&nbsp;<span class="glyphicon glyphicon-info-sign icon-white"></span>
+	</button>
+</div>
+
+
+
+<div class="modal fade" id="about" tabindex="-1" role="dialog" aria-labelledby="about1" aria-hidden="true">
+<!-- <div id="about" class="modal hide"> -->
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">OkBit.ru UDP</h4>
+			</div>
+			<div class="modal-body">
+				<div class="float-right">
+					<img src="../templates/okbit/img/logo.png"  width="48" height="48">
+					<br><br><p><b>v.1.0.0a</b></p>
+				</div>
+                <p class="float-left">
+					<#LANG_OKBIT_APP_MODULE#><br><br>
+					Обсуждение модуля на <a href="https://majordomo.smartliving.ru/forum/viewtopic.php?f=5&t=4863" target="_blank">форуме</a>.<br>
+					Проект на <a href="https://github.com/skysilver-lab/majordomo-xiaomimiio" target="_blank">Github</a>.<br>
+					Проект в <a href="https://connect.smartliving.ru/tasks/51.html" target="_blank">Connect</a>.<br>
+				</p>
+				
+				<h6>Благодарности: <b>skysilver</b>, <b>Aven</b></h6>
+			</div>
+			<div class="modal-footer">
+				<div class="pull-left"><#LANG_OKBIT_APP_Author#>: <a href="http://okbit.ru" target="_blank">foxvlad</a></div>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div>
+	<img src="../templates/okbit/img/logo.png"  width="30" height="30">
+	&nbsp;&nbsp;&nbsp;
+	<a class="btn btn-default" href="#api_settings" data-toggle="collapse"><i class="glyphicon glyphicon-cog"></i> <#LANG_SETUP#></a>
+	&nbsp;&nbsp;&nbsp;
+	[#if CYCLERUN==1#]
+		<span class="label label-success" title="Статус цикла"><#LANG_OKBIT_APP_CYCLE_START#></span>
+	[#else#]
+		<span class="label label-danger" title="Статус цикла"><#LANG_OKBIT_APP_CYCLE_STOP#></span>
+	[#endif#]
+</div>
+
+
+
+<div class="collapse" id='api_settings'>
+	&nbsp;
+    <form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+        <fieldset>
+            <div class="form-group">
+                <label class="control-label">IP адрес 
+				<span class='support' tabindex="1" data-title="Необходимо указать для корректной работы на сервере с двумя и более сетевыми интерфейсами.">
+					<i class="glyphicon glyphicon-info-sign"></i>
+				</span>
+                </label>
+                <div class="col-lg-4"><input class="form-control" type="text" name="api_ip" value="<#API_IP#>" class="input"></div>
+            </div>
+			
+			<div class="form-group">
+                <div class="controls"><input type="checkbox" name="api_log_debmes" value="1"[#if API_LOG_DEBMES="1"#] checked[#endif#]> 
+					Отладка DebMes
+					<span class='support' tabindex="1" data-title="Запись обмена сообщениями между сервером и устройствами в отдельный лог-файл YYYY-mm-dd-okbit.log.">
+						<i class="glyphicon glyphicon-info-sign"></i>
+					</span>
+				</div>
+			</div>			
+			
+			
+			<div class="form-group">
+                <div class="controls"><input type="checkbox" name="api_log_cycle" value="1"[#if API_LOG_CYCLE="1"#] checked[#endif#]> 
+					Отладка Cycle
+					<span class='support' tabindex="1" data-title="Запись обмена сообщениями между сервером и устройствами в отдельный лог-файл YYYY-mm-dd-cycle_okbit.log. Для вступления изменений в силу требуется перезапустить цикл.">
+						<i class="glyphicon glyphicon-info-sign"></i>
+					</span>
+				</div>
+            </div>
+			
+            <div class="form-actions">
+                <button type="submit" name="subm" value="Submit" class="btn btn-primary"><#LANG_UPDATE#></button>
+                <input type="hidden" name="view_mode" value="update_settings">
+                <input type="hidden" name="mode" value="update">
+            </div>
+			
+			
+			
+			
+        </fieldset>
+    </form>
+</div>
+
+[#inc okbit_gate_search_admin.html#]
+ [#endif VIEW_MODE#]
+ <!-- / table miio_devices search -->
+ 
+ 
+ <!-- okbit gate edit -->  
+	[#if VIEW_MODE="edit_okbit_gate"#]
+		[#inc okbit_gate_edit_default.html#]
+	[#endif VIEW_MODE#]	
+ <!-- / okbit gate edit -->
+
+  <!-- okbit gate discover -->  
+	[#if VIEW_MODE="discover_gate"#]
+		[#inc okbit_discover_gate.html#]
+	[#endif VIEW_MODE#]	
+ <!-- / okbit gate discover -->
+
+ 
+  
+ [#endif DATA_SOURCE#] 
+ 
+ 
+ 
+ 
+ 
+ [#if DATA_SOURCE="okbit_commands"#]
+ 
+ 
+ <!-- table miio_commands search -->
+ [#if VIEW_MODE="search_okbit_commands" || VIEW_MODE=""#]
+  [#inc okbit_commands_search_admin.html#]
+ [#endif VIEW_MODE#]
+ <!-- / table miio_commands search -->
+ 
+ <!-- table miio_commands edit -->
+ [#if VIEW_MODE="edit_okbit_commands"#]
+   [#inc okbit_commands_edit.html#]
+ [#endif VIEW_MODE#]
+ <!-- / table miio_commands edit -->
+ 
+ 
+ <!-- table miio_commands view --> 
+ [#if VIEW_MODE="view_okbit_commands"#]
+   [#inc okbit_commands_view.html#]
+ [#endif VIEW_MODE#]
+ <!-- / table miio_commands view -->
+ 
+  
+ [#endif DATA_SOURCE#]
+ 
+ 
+ [#if DATA_SOURCE="okbit_devices"#]
+
+ <!-- okbit devices search -->  
+	[#if VIEW_MODE="search_okbit_devices" || VIEW_MODE="" #]
+	
+	
+	[#inc okbit_devices_search_admin.html#] 
+	[#endif VIEW_MODE#]	
+<!-- / okbit devices search -->
+
+
+<!-- okbit devices edit -->  
+	[#if VIEW_MODE="edit_okbit_devices"#]
+	
+		[#if ID=""#]
+		<h4><#PARENT_TITLE#> / Добавить модуль</h4>
+		
+		[#else ID#]
+		<h4><#PARENT_TITLE#> / <#TITLE#></h4>
+		
+		[#endif ID#]
+	
+	[#if ID!=""#]		
+		<ul class="nav nav-tabs">
+			<li[#if TAB=""#] class="active"[#endif#]>
+				<a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=&parent_id=<#PARENT_ID#>&parent_title=<#PARENT_TITLE#>"><#LANG_GENERAL#></a>
+			</li>
+			<li[#if TAB="data"#] class="active"[#endif#]>
+				<a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=data&parent_id=<#PARENT_ID#>&parent_title=<#PARENT_TITLE#>"><#LANG_DATA#></a>
+			</li>
+		</ul>
+	[#endif ID#]	
+	[#if TAB=""#]
+		&nbsp;<br/><br/>
+		[#inc okbit_devices_edit_default.html#] 
+	[#endif TAB#]
+	[#if TAB="data"#]
+		&nbsp;<br/><br/>
+		[#inc okbit_devices_edit_data.html#]
+	[#endif TAB#]
+	
+	
+	
+	[#endif VIEW_MODE#]	
+<!-- / okbit devices edit -->
+
+
+
+<!-- okbit devices discover -->  
+	[#if VIEW_MODE="devices_discover"#]
+	
+		
+		<legend><#PARENT_TITLE#> / Автоматический поиск модулей </legend>
+	
+
+		[#inc okbit_devices_discover.html#] 
+
+	
+	
+	
+	[#endif VIEW_MODE#]	
+<!-- / okbit devices discover -->
+ 
+ 
+
+  [#endif DATA_SOURCE#]
