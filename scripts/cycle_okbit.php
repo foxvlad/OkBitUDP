@@ -37,9 +37,11 @@
 	$bind_port = '6500';
 	
 	$latest_check=0;
+	$latest_disc = 0;
 	$checkEvery=5; // poll every 5 seconds
-
-
+	
+	
+	$disc_period = 120; //Период состояния шлюза
 
 	if ($okbit_module->config['API_IP']) $bind_ip = $okbit_module->config['API_IP'];
 	if ($okbit_module->config['API_LOG_DEBMES']) $debmes_debug = true;
@@ -100,6 +102,12 @@
 		setGlobal((str_replace('.php', '', basename(__FILE__))) . 'Run', time(), 1);
 
 	   }
+	   
+	   
+		if ((time() - $latest_disc) >= $disc_period) {
+			$latest_disc = time();
+			if ($cycle_debug) echo date('H:i:s') . " Starting scan gates" . PHP_EOL;
+		}
 	   
 		  
 		//echo "Waiting for data ...".PHP_EOL;
