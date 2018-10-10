@@ -37,7 +37,13 @@
 	
 */
 
-	Define('UDP_LOG', "C:\/_majordomo\/htdocs\/test_okbit\/udp_log.txt"); // Путь к файлу записи логов
+		//функция записи в лог полученного сообщения
+	function log_write($s_mess){
+		$text = date("d-m-Y H:i:s") . ' - ' .  $s_mess .PHP_EOL;
+		$fp = fopen ("udp_sent_log.txt",  "a+");  //!!! лог файл
+		fwrite($fp,$text);
+		fclose($fp);
+	}
 
 	require_once "udp_okbit.class.php"; // Подключаем класс 
 	require_once "udppacket.class.php";
@@ -65,6 +71,8 @@
 	$gate->sock_create(); //Создание UDP сокета
 	$gate->sockSetTimeout(); //Установка таймаута для получения ответа
 	$gate->udp_send($data_send); // отправка пакета
+	
+	log_write($data_send);//вызов функции записи в лог полученного сообщения
 
 
 
