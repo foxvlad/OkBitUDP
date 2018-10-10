@@ -68,9 +68,19 @@
 		if ($check_in == hexdec($arr[$arr_count - 2] . $arr[$arr_count - 1])){ //если чек сум правельный производим дальнейшию обработку
 
 
-			if ($udp_package['cmd'] == 30) return "000B";
+			if ($udp_package['cmd'] == 30) {
 
-			else if ($udp_package['cmd'] == 255) { // Ответ на широковещательный запрос с VER: 1.1 SN: 181000005
+				if ($udp_package['vol_2'] == "1" ){
+					$state_lamp = "On";
+				}
+
+				else $state_lamp = "Off";
+
+				echo 'LAMP' . $udp_package['vol_1'] . ' - ' . $state_lamp . PHP_EOL;
+				return "000B";
+			}
+
+			else if ($udp_package['cmd'] == 255) { // Ответ на широковещательный запрос с VER: 1.4 SN: 181000005
 				return "4F4B4249542D554450AAAA1100001770000D0000000100040712000504AB";
 			}
 		}
