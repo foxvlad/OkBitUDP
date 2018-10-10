@@ -394,7 +394,7 @@ class okbit extends module {
 	
 	function bind_gate() {
 		
-		$r_cmd = 10;
+		$r_cmd = 64;
 		
 		require(DIR_MODULES.$this->name . '/lib/udp_send.php');
 						
