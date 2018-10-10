@@ -5,7 +5,7 @@
 * @package project
 * @author Wizard <foxvlad@yandex.ru>
 * @copyright http://okbit.ru (c)
-* @version 0.1 (wizard, [Feb 04, 2018])
+* @version 0.1 (wizard, [Feb 14, 2018])
 */
 
 if ($this->owner->name == 'panel') {
