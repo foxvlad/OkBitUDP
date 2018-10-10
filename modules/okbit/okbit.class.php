@@ -474,7 +474,8 @@ class okbit extends module {
 		SQLUpdate('okbit_data', $properties);
 		
 		$r_cmd = 30;
-
+		
+		DebMes('function SetHandle ' . PHP_EOL, 'okbit');
 		
 		require(DIR_MODULES.$this->name . '/lib/udp_send.php');
 		
