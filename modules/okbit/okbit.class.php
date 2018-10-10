@@ -45,7 +45,7 @@ class okbit extends module {
 	
 	function okbit() {
 	  $this->name="okbit";
-	  $this->title="OkBit";
+	  $this->title="OkBitUDP";
 	  $this->module_category="<#LANG_SECTION_DEVICES#>";
 	  $this->checkInstalled();
 	}
