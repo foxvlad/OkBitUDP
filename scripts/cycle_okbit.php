@@ -108,7 +108,7 @@
 			$latest_disc = time();
 			if ($cycle_debug) echo date('H:i:s') . " Starting scan gates" . PHP_EOL;
 			
-			$queue = SQLSelect("SELECT * FROM `okbit_data`");
+			$queue = SQLSelect("SELECT * FROM `okbit_gate`");
 			if ($queue[0]['ID']) {
 				$total = count($queue);
 				if ($cycle_debug) echo  "В базе найдено - " . $total . " уст." . PHP_EOL;
