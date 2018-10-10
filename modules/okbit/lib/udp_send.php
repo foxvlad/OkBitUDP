@@ -97,7 +97,7 @@
 	else if ($r_cmd == 10) {    // Данные для формирование пакета для запроса информации ошлюзе
 		DebMes( date("H:i:s") . '  - cmd 10' . PHP_EOL, 'okbit');
 		$udppacket = new Udp_packet(0, 0, 65534, 10, 0, 0, 0, 0);
-		$gate = new Udp_gate('192.168.1.35', 6400, '0.0.0.0', 6600, $this->config['API_LOG_DEBMES']); //задаем свойства класса адрес и порт шлюза и порт модуля udp_send
+		$gate = new Udp_gate('192.168.1.38', 6400, '0.0.0.0', 6600, $this->config['API_LOG_DEBMES']); //задаем свойства класса адрес и порт шлюза и порт модуля udp_send
 	}
 
 	
