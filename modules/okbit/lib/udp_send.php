@@ -84,20 +84,20 @@
 
 
 	if ($r_cmd == 255) {    // Данные для формирование широковещательного пакета на отправку
-	$udppacket = new Udp_packet(0, 0, 65534, 255, 0, 0, 0, 0);
-	$gate = new Udp_gate('255.255.255.255', 6400, '0.0.0.0', 6600, $this->config['API_LOG_DEBMES']); //задаем свойства класса адрес и порт шлюза и порт модуля udp_send
+		$udppacket = new Udp_packet(0, 0, 65534, 255, 0, 0, 0, 0);
+		$gate = new Udp_gate('255.255.255.255', 6400, '0.0.0.0', 6600, $this->config['API_LOG_DEBMES']); //задаем свойства класса адрес и порт шлюза и порт модуля udp_send
 	}
 
 	else if ($r_cmd == 30)  {  // Данные для формирование пакета на отправку
-	$udppacket = new Udp_packet($rs_id['SUB_ID'], 0, 65534, $r_cmd, $rs_id['SUB_ID'], $rs_id['DEVICE_ID'], $dev_in, $value);
-	//$gate = new Udp_gate('192.168.88.252', 6400, '0.0.0.0', 6600, true); //задаем свойства класса адрес и порт шлюза и порт модуля udp_send
-	$gate = new Udp_gate($gate_sh['IP'], 6400, '0.0.0.0', 6600, $this->config['API_LOG_DEBMES']); //задаем свойства класса адрес и порт шлюза и порт модуля udp_send
+		$udppacket = new Udp_packet($rs_id['SUB_ID'], 0, 65534, $r_cmd, $rs_id['SUB_ID'], $rs_id['DEVICE_ID'], $dev_in, $value);
+		//$gate = new Udp_gate('192.168.88.252', 6400, '0.0.0.0', 6600, true); //задаем свойства класса адрес и порт шлюза и порт модуля udp_send
+		$gate = new Udp_gate($gate_sh['IP'], 6400, '0.0.0.0', 6600, $this->config['API_LOG_DEBMES']); //задаем свойства класса адрес и порт шлюза и порт модуля udp_send
 	}
 	
 	else if ($r_cmd == 10) {    // Данные для формирование пакета для запроса информации ошлюзе
-	if ($this->debug) DebMes( date("H:i:s") . '  - cmd 10' . PHP_EOL, 'okbit');
-	$udppacket = new Udp_packet(0, 0, 65534, 10, 0, 0, 0, 0);
-	$gate = new Udp_gate('192.168.1.35', 6400, '0.0.0.0', 6600, $this->config['API_LOG_DEBMES']); //задаем свойства класса адрес и порт шлюза и порт модуля udp_send
+		DebMes( date("H:i:s") . '  - cmd 10' . PHP_EOL, 'okbit');
+		$udppacket = new Udp_packet(0, 0, 65534, 10, 0, 0, 0, 0);
+		$gate = new Udp_gate('192.168.1.35', 6400, '0.0.0.0', 6600, $this->config['API_LOG_DEBMES']); //задаем свойства класса адрес и порт шлюза и порт модуля udp_send
 	}
 
 	
@@ -109,7 +109,7 @@
 	$gate->sockSetTimeout(); //Установка таймаута для получения ответа
 	if ($r_cmd == 255) {
 		$gate->sockSetBroadcast(); //Установки для широковешательной отправки
-		if ($this->debug) DebMes( date("H:i:s") . '  sockSetBroadcast' . PHP_EOL, 'okbit');
+		DebMes( date("H:i:s") . '  sockSetBroadcast' . PHP_EOL, 'okbit');
 	}
 	$gate->udp_send($data_send); // отправка пакета
 
