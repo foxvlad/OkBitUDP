@@ -75,12 +75,19 @@
 				}
 
 				else $state_lamp = "Off";
-
-				echo 'LAMP' . $udp_package['vol_1'] . ' - ' . $state_lamp . PHP_EOL;
+				echo '==============================================' . PHP_EOL;
+				echo PHP_EOL;
+				echo '           LAMP ' . $udp_package['vol_1'] . ' - ' . $state_lamp . PHP_EOL;
+				echo '==============================================' . PHP_EOL;
+				echo PHP_EOL;
 				return "000B";
 			}
 
 			else if ($udp_package['cmd'] == 255) { // Ответ на широковещательный запрос с VER: 1.4 SN: 181000005
+				return "4F4B4249542D554450AAAA1100001770000D000000010005070D000504A7";
+			}
+			
+			else if ($udp_package['cmd'] == 10) { // Ответ на широковещательный запрос с VER: 1.4 SN: 181000005
 				return "4F4B4249542D554450AAAA1100001770000D000000010005070D000504A7";
 			}
 		}
