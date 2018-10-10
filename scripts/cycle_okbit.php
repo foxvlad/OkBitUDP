@@ -111,7 +111,7 @@
 			$queue = SQLSelect("SELECT * FROM `okbit_gate`");
 			if ($queue[0]['ID']) {
 				$total = count($queue);
-				if ($cycle_debug) echo  "В базе найдено - " . $total . " уст." . PHP_EOL;
+				if ($cycle_debug) echo  "In base found - " . $total . " gates" . PHP_EOL;
 			}
 		}
 	   
