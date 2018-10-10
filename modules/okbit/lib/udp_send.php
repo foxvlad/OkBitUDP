@@ -314,7 +314,7 @@
 		public function udp_msg_packet() {  //Функция сборки пакета
 
 
-			if ( $this->cmd == 20 || $this->cmd == 21 || $this->cmd == 22 || $this->cmd == 25 || $this->cmd == 26 || $this->cmd == 255 ) { // Запрос без переменной только команда
+			if ($this->cmd == 10 || $this->cmd == 20 || $this->cmd == 21 || $this->cmd == 22 || $this->cmd == 25 || $this->cmd == 26 || $this->cmd == 255 ) { // Запрос без переменной только команда
 				$length = 9;
 			}
 
@@ -322,7 +322,7 @@
 				$length = 11;
 			}
 
-			else if ($this->cmd == 10 || $this->cmd == 30){// Присвоение одного значение ОЗУ, передается два параметра:  адрес канала ОЗУ, значение)
+			else if ($this->cmd == 30){// Присвоение одного значение ОЗУ, передается два параметра:  адрес канала ОЗУ, значение)
 				$length = 13;
 			}
 
@@ -372,7 +372,7 @@
 				$this->checksum = 	$this->checksum + hexdec($date_array['val_HI1']) + hexdec($date_array['val_LOW1']);
 			}
 
-			else if ($this->cmd == 10 || $this->cmd == 30) {
+			else if ($this->cmd == 30) {
 				$this->checksum = 	$this->checksum + hexdec($date_array['val_HI1']) + hexdec($date_array['val_LOW1']) +
 									hexdec($date_array['val_HI2']) + hexdec($date_array['val_LOW2']);
 
@@ -411,7 +411,7 @@
 				$data_packet = 	$data_packet . $date_array['val_HI1']  . $date_array['val_LOW1'];
 			}
 
-			else if ($this->cmd == 10 || $this->cmd == 30) {
+			else if ($this->cmd == 30) {
 				$data_packet = 	$data_packet . $date_array['val_HI1']  . $date_array['val_LOW1'] .
 								$date_array['val_HI2'] . $date_array['val_LOW2'];
 
