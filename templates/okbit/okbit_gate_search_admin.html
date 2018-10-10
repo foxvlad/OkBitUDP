@@ -135,7 +135,7 @@
 	[#if "<#ACTION#>"=="admin"#]
 		<a href="?view_mode=update_gate&data_source=<#DATA_SOURCE#>" class="btn btn-default" title="Получить актуальное версию прошивки"><i class="glyphicon glyphicon-refresh"></i></a>
 		
-		<a href="?data_source=okbit_devices&view_mode=search_okbit_devices&parent_title=[#TITLE#]&parent_id=[#ID#]"  title="Привязать шлюз к серверу" class="btn btn-default [#if STATUS==0#]disabled[#endif#]"><i class="glyphicon glyphicon-ok-sign"></i></a>
+		<a href="?view_mode=test_gate&data_source=<#DATA_SOURCE#>" class="btn btn-default"  title="Привязать шлюз к серверу" class="btn btn-default [#if STATUS==0#]disabled[#endif#]"><i class="glyphicon glyphicon-ok-sign"></i></a>
 		
 		<a href="?data_source=okbit_devices&view_mode=search_okbit_devices&parent_title=[#TITLE#]&parent_id=[#ID#]"  title="Устройства на шлюзе" class="btn btn-default"><i class="glyphicon glyphicon-th-list"></i></a>
 		
