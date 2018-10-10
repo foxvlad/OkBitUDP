@@ -78,11 +78,11 @@
 				}
 
 				if ($cmd_devices['DEVICE'] == 6002){
-					$cmd_dev = explode(',',DATE_6004);
+					$cmd_dev = explode(',',DATE_6002);
 				}
 
 				if ($cmd_devices['DEVICE'] == 6003){
-					$cmd_dev = explode(',',DATE_6004);
+					$cmd_dev = explode(',',DATE_6003);
 				}
 
 				if ($cmd_devices['DEVICE'] == 6004){
