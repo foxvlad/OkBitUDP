@@ -357,6 +357,25 @@ class okbit extends module {
 	}
 	
 	
+	/**
+	* okbit_update_gate
+	*
+	* @access public
+	*/
+	
+	function update_gate() {
+		
+		$r_cmd = 10;
+		
+		require(DIR_MODULES.$this->name . '/lib/udp_send.php');
+						
+		if ($gate->st_recive == 1) $this->udp_parsing($gate->redate, $gate->ip_gate);
+		
+				
+		$this->redirect('?');
+	}
+	
+	
 	
 	/**
 	* okbit_devices edit/add
