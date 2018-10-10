@@ -238,6 +238,10 @@ class okbit extends module {
 				$this->discover_gate();
 			}
 			
+			if ($this->view_mode == 'update_gate') { // Получение информации о шлюзе 
+				$this->update_gate();
+			}
+			
 			if ($this->view_mode == 'delete_okbit_gate') { //Удаление шлюза
 				$this->delete_okbit_gate($this->id);
 				$this->redirect('?data_source=okbit_gate');
