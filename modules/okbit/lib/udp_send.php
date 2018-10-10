@@ -411,7 +411,7 @@
 				$data_packet = 	$data_packet . $date_array['val_HI1']  . $date_array['val_LOW1'];
 			}
 
-			else if ($this->cmd == 30) {
+			else if ($this->cmd == 10 || $this->cmd == 30) {
 				$data_packet = 	$data_packet . $date_array['val_HI1']  . $date_array['val_LOW1'] .
 								$date_array['val_HI2'] . $date_array['val_LOW2'];
 
