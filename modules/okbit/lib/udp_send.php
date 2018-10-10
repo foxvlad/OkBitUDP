@@ -220,13 +220,7 @@
 
 		public function udp_send($udpPacket = NULL, $hash_msg = NULL){
 
-			if ($udpPacket != NULL){
-				$this->data = $udpPacket;
-			}
-			else { //если сообщение пустое вывести на экран запрос сообщения, только для отладки
-				echo 'Enter a message to send : ';
-				$this->data = fgets(STDIN);
-			}
+			if ($udpPacket != NULL) $this->data = $udpPacket;			
 
 			//Отправка сообщения на шлюз
 			if( !socket_sendto($this->sock, $this->data, strlen($this->data) , 0 ,  $this->ip_gate,  $this->port_gate))
@@ -248,11 +242,7 @@
 				$this->st_recive = 0;
 			}
 
-			else {
-				$this->st_recive = 1;
-				 if ($this->debug) DebMes( date("H:i:s") . ' - answer ' . $this->redate . PHP_EOL, 'okbit');
-			}
-
+			else $this->st_recive = 1;
 
 
 			$this->ip_gate = $remote_ip;

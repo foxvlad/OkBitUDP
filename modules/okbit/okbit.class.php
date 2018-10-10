@@ -373,7 +373,7 @@ class okbit extends module {
 		
 		require(DIR_MODULES.$this->name . '/lib/udp_send.php');
 						
-		if ($gate->st_recive == 1) $this->udp_parsing($gate->redate, $gate->ip_gate);
+		if ($gate->st_recive == 1) $this->udp_parsing($gate->redate);
 		
 				
 		$this->redirect('?');
