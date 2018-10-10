@@ -239,7 +239,7 @@ class okbit extends module {
 			}
 			
 			if ($this->view_mode == 'update_gate') { // Получение информации о шлюзе 
-				$this->update_gate();
+				//$this->update_gate();
 			}
 			
 			if ($this->view_mode == 'delete_okbit_gate') { //Удаление шлюза
