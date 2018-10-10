@@ -37,7 +37,13 @@
 	
 */
 
-	Define('UDP_LOG', "C:\/_majordomo\/htdocs\/test_okbit\/udp_log.txt"); // Путь к файлу записи логов
+		//функция записи в лог полученного сообщения
+	function log_write($s_mess){
+		$text = date("d-m-Y H:i:s") . ' - ' .  $s_mess .PHP_EOL;
+		$fp = fopen ("udp_sent_log.txt",  "a+");  //!!! лог файл
+		fwrite($fp,$text);
+		fclose($fp);
+	}
 
 	require_once "udp_okbit.class.php"; // Подключаем класс 
 	require_once "udppacket.class.php";
@@ -64,18 +70,26 @@
 	
 	$gate->sock_create(); //Создание UDP сокета
 	$gate->sockSetTimeout(); //Установка таймаута для получения ответа
+	log_write($data_send);//вызов функции записи в лог полученного сообщения
 	$gate->udp_send($data_send); // отправка пакета
+	
+	
 
 
 
-	//функция записи в лог полученного сообщения
-	function log_write($s_mess){ 
-		$dt = date("d-m-Y H:i:s");
-		$text = $dt . " - " . $s_mess.PHP_EOL;  
-		$fp = fopen (UDP_LOG, "a+");
-		fwrite($fp,$text);  
-		fclose($fp);  
+	
+	echo "Are you sure you want to do this?  Type 'yes' to continue: ";
+	$handle = fopen ("php://stdin","r");
+	$line = fgets($handle);
+	if(trim($line) != 'yes'){
+		echo "ABORTING!\n";
+		exit;
 	}
+	echo "\n";
+	echo "Thank you, continuing...\n";
 
 
+	
+	
+	
 ?>
