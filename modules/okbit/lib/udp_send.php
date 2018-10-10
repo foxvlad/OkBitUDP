@@ -315,7 +315,7 @@
 
 
 			if ($this->cmd == 10 || $this->cmd == 20 || $this->cmd == 21 || $this->cmd == 22 || $this->cmd == 25 || $this->cmd == 26 || $this->cmd == 255 ) { // Запрос без переменной только команда
-				$length = 9;
+				$length = 13;
 			}
 
 			else if ($this->cmd == 23 || $this->cmd == 24 ) { // Считать статус  - передается 1 парматр
