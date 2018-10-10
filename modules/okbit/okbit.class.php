@@ -242,6 +242,12 @@ class okbit extends module {
 				$this->update_gate();
 			}
 			
+			
+			if ($this->view_mode == 'bind_gate') { // Подвязать шлюз
+				$this->bind_gate();
+			}
+			
+			
 			if ($this->view_mode == 'delete_okbit_gate') { //Удаление шлюза
 				$this->delete_okbit_gate($this->id);
 				$this->redirect('?data_source=okbit_gate');
@@ -373,11 +379,31 @@ class okbit extends module {
 		
 		require(DIR_MODULES.$this->name . '/lib/udp_send.php');
 						
+		if ($gate->st_recive == 1) $this->udp_parsing($gate->redate, $gate->ip_gate);
+		
+				
+		$this->redirect('?');
+	}
+	
+	
+	/**
+	* okbit_bind_gate
+	*
+	* @access public
+	*/
+	
+	function bind_gate() {
+		
+		$r_cmd = 10;
+		
+		require(DIR_MODULES.$this->name . '/lib/udp_send.php');
+						
 		//if ($gate->st_recive == 1) $this->udp_parsing($gate->redate, $gate->ip_gate);
 		
 				
 		$this->redirect('?');
 	}
+	
 	
 	
 	
