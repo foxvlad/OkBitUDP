@@ -113,8 +113,8 @@
 				$total = count($gates);
 				if ($cycle_debug) echo  "In base found - " . $total . " gates" . PHP_EOL;
 				for ($i = 0; $i < $total; $i++) {
-					$ip_gate_t = $gates[$i]['IP'];					
-					if ($cycle_debug) echo  "IP gate $i - " . $ip_gate_t . PHP_EOL;
+						
+					if ($cycle_debug) echo  "Gate ID - ". $gates[$i]['ID'] . "  IP: " . $gates[$i]['IP'] . PHP_EOL;
 				}
 			}
 		}
