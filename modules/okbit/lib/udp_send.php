@@ -95,6 +95,7 @@
 	}
 	
 	else if ($r_cmd == 10) {    // Данные для формирование пакета для запроса информации ошлюзе
+	if ($this->debug) DebMes( date("H:i:s") . '  - cmd 10' . PHP_EOL, 'okbit');
 	$udppacket = new Udp_packet(0, 0, 65534, 10, 0, 0, 0, 0);
 	$gate = new Udp_gate('192.168.1.35', 6400, '0.0.0.0', 6600, $this->config['API_LOG_DEBMES']); //задаем свойства класса адрес и порт шлюза и порт модуля udp_send
 	}
@@ -106,7 +107,10 @@
 
 	$gate->sock_create(); //Создание UDP сокета
 	$gate->sockSetTimeout(); //Установка таймаута для получения ответа
-	if ($r_cmd == 255) $gate->sockSetBroadcast(); //Установки для широковешательной отправки
+	if ($r_cmd == 255) {
+		$gate->sockSetBroadcast(); //Установки для широковешательной отправки
+		if ($this->debug) DebMes( date("H:i:s") . '  sockSetBroadcast' . PHP_EOL, 'okbit');
+	}
 	$gate->udp_send($data_send); // отправка пакета
 
 
@@ -173,6 +177,8 @@
 		*/
 
 		public function sockSetBroadcast() {
+			
+			if ($this->debug) DebMes( date("H:i:s") . ' in sockSetBroadcast' . PHP_EOL, 'okbit');
 
 			if (!socket_set_option($this->sock, SOL_SOCKET, SO_BROADCAST, 1)) {
 				$errorcode = socket_last_error();
