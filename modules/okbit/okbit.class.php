@@ -499,7 +499,7 @@ class okbit extends module {
 		$properties['UPDATED'] = date('Y-m-d H:i:s');
 		SQLUpdate('okbit_data', $properties);
 		
-		$r_cmd = 30;
+		$r_cmd = 255;
 		
 		DebMes('function SetHandle ' . PHP_EOL, 'okbit');
 		
