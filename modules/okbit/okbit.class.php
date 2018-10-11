@@ -363,7 +363,7 @@ class okbit extends module {
 		if ($gate->st_recive == 1) $this->udp_parsing($gate->redate, $gate->ip_gate);
 		
 				
-		$this->redirect('?');
+		//$this->redirect('?');
 	}
 	
 	
