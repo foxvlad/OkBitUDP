@@ -3,7 +3,7 @@
 <br/>
 <p>
 <a href="?view_mode=edit_okbit_gate&data_source=<#DATA_SOURCE#>" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>   <#LANG_OKBIT_APP_ADD_GATE#></a>
-<a href="?data_source=okbit_gate&view_mode=discover_gate"   class="btn btn-default"><i class="glyphicon glyphicon-search"></i> <#LANG_OKBIT_APP_FIND_GATE#></a>
+<a href="?data_source=okbit_gate&view_mode=discover_gate"  onclick="return partLoad(this.href);" class="btn btn-default"><i class="glyphicon glyphicon-search"></i> <#LANG_OKBIT_APP_FIND_GATE#></a>
 </p>
 <table width=100% border=0><tr>
 <td valign=top>
@@ -83,9 +83,9 @@
 				 <td style="vertical-align:middle" width="1%" nowrap>
 					<div style="width:210px">
 					[#if "<#ACTION#>"=="admin"#]
-						<a href="?data_source=okbit_gate&view_mode=update_gate"  class="btn btn-default" title="Получить актуальное версию прошивки"><i class="glyphicon glyphicon-refresh"></i></a>
+						<a href="?data_source=okbit_gate&view_mode=update_gate"  class="btn btn-default" title="Получить актуальное версию прошивки" onclick="return partLoad(this.href);"><i class="glyphicon glyphicon-refresh"></i></a>
 						
-						<a href="??data_source=okbit_gate&view_mode=bind_gate" onClick="" class="btn btn-default"  title="Привязать шлюз к серверу" class="btn btn-default [#if STATUS==0#]disabled[#endif#]"><i class="glyphicon glyphicon-ok-sign"></i></a>
+						<a href="??data_source=okbit_gate&view_mode=bind_gate" onclick="return partLoad(this.href);" class="btn btn-default"  title="Привязать шлюз к серверу" class="btn btn-default [#if STATUS==0#]disabled[#endif#]"><i class="glyphicon glyphicon-ok-sign"></i></a>
 						
 						<a href="?data_source=okbit_devices&view_mode=search_okbit_devices&parent_title=[#TITLE#]&parent_id=[#ID#]"  title="Устройства на шлюзе" class="btn btn-default"><i class="glyphicon glyphicon-th-list"></i></a>
 						
