@@ -181,6 +181,8 @@ class okbit extends module {
 	
 	function admin(&$out) {
 		
+		DebMes("admin(): " . $_SERVER['REQUEST_URI'], $this->name);
+		
 		$this->getConfig();
 		 
 		$out['API_IP']=$this->config['API_IP'];
