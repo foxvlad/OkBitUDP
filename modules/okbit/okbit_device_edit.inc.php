@@ -1,23 +1,12 @@
 <?php
 
-/**
-* OkBit (UDP-пакеты) 
-* @package project
-* @author Wizard <foxvlad@yandex.ru>
-* @copyright http://okbit.ru (c)
-* @version 0.1 (wizard, [Feb 04, 2018])
-*/
-
 if ($this->owner->name == 'panel') {
 	$out['CONTROLPANEL'] = 1;
-
 }
 
 global $session;
-
 $out['PARENT_TITLE'] =  $parent_title;
 $out['PARENT_ID'] =  $parent_id;
-
 
 $table_name = 'okbit_devices';
 
@@ -29,7 +18,6 @@ if ($this->mode == 'update') {
 	$ok = 1;
 	
 	if ($this->tab == '') {
-		
 
 		global $title;
 		$rec['TITLE'] = $title;
@@ -48,75 +36,79 @@ if ($this->mode == 'update') {
 			$out['ERR_DEVICE_ID'] = 1;
 			$ok = 0;
 		}
+				
+		$rec['PARENT_ID'] = $out['PARENT_ID'];
 		
-		global $device;
+		global $device;			
+		if ($device != $rec['DEVICE']) {
+			$temp_sql = SQLSelectOne("SELECT * FROM `okbit_data` WHERE DEVICE_ID='$id'  AND ETHERNET='0'");
+			if ($temp_sql)SQLExec("DELETE FROM `okbit_data`  WHERE DEVICE_ID='$id'  AND ETHERNET='0'");
+		}			
 		$rec['DEVICE'] = $device;
 		if ($rec['DEVICE'] == '') {
 			$out['ERR_DEVICE'] = 1;
 			$ok = 0;
 		}
+		
+		$in_out = '';
+		
+		if ($rec['DEVICE'] =='6001'){
+			$in_out = explode(',',DATA_6001);
+		}
+	
+		else if ($rec['DEVICE'] =='6002'){
+			$in_out = explode(',',DATA_6002);
+		}
+		
+		else if ($rec['DEVICE'] =='6003'){
+			$in_out = explode(',',DATA_6003);
+		}
+		
+		else if ($rec['DEVICE'] =='6004'){
+			$in_out = explode(',',DATA_6004);
+		}
+		
+		else if ($rec['DEVICE'] =='6005'){
+			$in_out = explode(',',DATA_6005);
+		}
+		
+		else if ($rec['DEVICE'] =='6006'){
+			$in_out = explode(',',DATA_6006);
+		}
+		
 				
-		$rec['PARENT_ID'] = $out['PARENT_ID'];
-	
-	
-	if ($rec['DEVICE'] =='6001'){
-		$in_out = '';
-		$in_out = explode(',',DATE_6001);
-	}
-	
-	if ($rec['DEVICE'] =='6002'){
-		$in_out = '';
-		$in_out = explode(',',DATE_6002);
-	}
-	
-	if ($rec['DEVICE'] =='6003'){
-		$in_out = '';
-		$in_out = explode(',',DATE_6003);
-	}
-	
-	if ($rec['DEVICE'] =='6004'){
-		$in_out = '';
-		$in_out = explode(',',DATE_6004);
-	}
-	
 	}
 
 	if ($ok) {
 		if ($rec['ID']) {
-			if ($this->config['API_LOG_DEBMES']) DebMes('Save params for device ' . $rec['DEVICE'] . ' with Sub_id - ' . $rec['SUB_ID'] . ' with ID- ' . $rec['DEVICE_ID'] .PHP_EOL, 'okbit');
+			if ($this->config['API_LOG_DEBMES']) DebMes('Save params for device ' . $rec['DEVICE'] . ' with Sub_id - ' . $rec['SUB_ID'] . ' with ID- ' . $rec['DEVICE_ID']. 'PARENT_ID- ' . $rec['PARENT_ID'] .PHP_EOL, 'okbit');
 			SQLUpdate($table_name, $rec);
 		} else {
-			if ($this->config['API_LOG_DEBMES']) DebMes('Manual add new device ' . $rec['DEVICE'] . ' with Sub_id - ' . $rec['SUB_ID'] . ' with ID- ' . $rec['DEVICE_ID'] .PHP_EOL, 'okbit');
+			if ($this->config['API_LOG_DEBMES']) DebMes('Manual add new device ' . $rec['DEVICE'] . ' with Sub_id - ' . $rec['SUB_ID'] . ' with ID- ' . $rec['DEVICE_ID']. ' PARENT_ID- ' . $rec['PARENT_ID'] .PHP_EOL, 'okbit');
 			$rec['ID'] = SQLInsert($table_name, $rec);
 		}
 		
 		$out['OK'] = 1;
 		
-		if ($this->tab == '') {
+		if ($this->tab == '' && $in_out != '') {
 			foreach($in_out as $cmd) {
-				$cmd_rec = SQLSelectOne("SELECT * FROM `okbit_data` WHERE DEVICE_ID=" . $rec['ID'] . " AND TITLE = '" . $cmd . "'");
+				$cmd_rec = SQLSelectOne("SELECT * FROM `okbit_data` WHERE DEVICE_ID=" . $rec['ID'] . " AND TITLE = '" . $cmd . "' AND ETHERNET='0'");
 				if (!$cmd_rec['ID']) {
 					$cmd_rec = array();
 					$cmd_rec['TITLE'] = $cmd;
+					$cmd_rec['ETHERNET'] = 0;
 					$cmd_rec['DEVICE_ID'] = $rec['ID'];
 					SQLInsert('okbit_data', $cmd_rec);
 				}
-			}
-			
-			// При сохранении настроек устройства выставим статус оффлайн
-			//$this->processCommand($rec['ID'], 'online', 0);
-			
-			//if ($rec['DEVICE_TYPE'] == 'chuangmi.ir.v2') {
-			//	//$this->processCommand($rec['ID'], 'freq', 38400);
-			//}
-			
-			
+			}			
 		}
+
 		
 	} else {
 		$out['ERR'] = 1;
 	}
 }
+
 
 if ($this->tab == 'data') {
 
@@ -128,7 +120,7 @@ if ($this->tab == 'data') {
 	}
 	
 
-	$properties = SQLSelect("SELECT * FROM `okbit_data` WHERE DEVICE_ID='" . $rec['ID'] . "' ORDER BY ID");
+	$properties = SQLSelect("SELECT * FROM `okbit_data` WHERE DEVICE_ID='" . $rec['ID'] . "'  AND ETHERNET='0' ORDER BY ID");
 
 	
 	$total = count($properties);
@@ -167,8 +159,6 @@ if ($this->tab == 'data') {
 	}
 	$out['PROPERTIES'] = $properties;   
 }
-
-
 
 
 outHash($rec, $out);

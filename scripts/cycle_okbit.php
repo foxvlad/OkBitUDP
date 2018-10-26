@@ -1,11 +1,11 @@
 <?php
 
 /**
-* OkBit (UDP-пакеты) 
+* OkBit (UDP-сокет) 
 * @package project
 * @author Wizard <foxvlad@yandex.ru>
 * @copyright http://okbit.ru (c)
-* @version 0.1 (wizard, [Feb 04, 2018])
+* @version 0.2 (wizard, 19:10:55 [Oct 11, 2018])
 */
 
 
@@ -38,101 +38,82 @@
 	
 	$latest_check=0;
 	$latest_disc = 0;
-	$checkEvery=5; // poll every 5 seconds
-	
-	
-	$disc_period = 120; //Период состояния шлюза
+	$checkEvery=5; // poll every 5 seconds	
+	$disc_period = 120; //Период состояния шлюза по умолчанию
 
 	if ($okbit_module->config['API_IP']) $bind_ip = $okbit_module->config['API_IP'];
 	if ($okbit_module->config['API_LOG_DEBMES']) $debmes_debug = true;
 	if ($okbit_module->config['API_LOG_CYCLE']) $cycle_debug = true;
+	if ($okbit_module->config['API_DISC_PERIOD']) $disc_period = (int)$okbit_module->config['API_DISC_PERIOD'];
 
 	echo date("H:i:s") . " running " . basename(__FILE__) .  PHP_EOL;
 	echo date('H:i:s') . " Bind IP - ".$bind_ip . PHP_EOL;
+	echo date('H:i:s') . " Sacn period - $disc_period seconds" . PHP_EOL;
 	echo date('H:i:s') . ' Cycle debug - ' . ($cycle_debug ? 'yes' : 'no') . PHP_EOL;
 	echo date('H:i:s') . ' DebMes debug - ' . ($debmes_debug ? 'yes' : 'no') . PHP_EOL;
 
-
-
- 
-
-
 	$sock = udp_socket($bind_ip, $bind_port);  //вызов функциии создания UDP-сокета
-	
-	
-	
+		
 	function udp_socket($bind_ip, $bind_port){ //создание сокета для прослушивания UDP-порта
-		 
-		 //Reduce errors
+		//Reduce errors
 		error_reporting(~E_WARNING);
 			 
 		//Create a UDP socket
 		if(!($sock = socket_create(AF_INET, SOCK_DGRAM, 0))){
-				
 			$errorcode = socket_last_error();
 			$errormsg = socket_strerror($errorcode);
-				 
 			die("Couldn't create socket: [$errorcode] $errormsg".PHP_EOL);
-			
 		}
-			 
+		
 		if ($cycle_debug) echo "Socket created".PHP_EOL;
-			 
 			 
 		// привязка исходного адреса
 		if( !socket_bind($sock, $bind_ip , $bind_port) ){
 			$errorcode = socket_last_error();
 			$errormsg = socket_strerror($errorcode);
-				 
 			die("Could not bind socket : [$errorcode] $errormsg".PHP_EOL);
 		}
 			
 		if ($cycle_debug) echo "Socket bind OK".PHP_EOL;
-
 		socket_set_option($sock, SOL_SOCKET, SO_RCVTIMEO, array("sec" => 1, "usec" => 0));
-
 		return ($sock);
 	 }
+	
+	$table_gate_sql = 'okbit_gate';
 
-
-	while (1){
-	   
-	   if ((time()-$latest_check)>$checkEvery) {
-		$latest_check=time();
-		setGlobal((str_replace('.php', '', basename(__FILE__))) . 'Run', time(), 1);
-
-	   }
-	   
-	   
+	while (1){	   
+		if ((time()-$latest_check)>$checkEvery) {
+			$latest_check=time();
+			setGlobal((str_replace('.php', '', basename(__FILE__))) . 'Run', time(), 1);
+		}
+	   	   
 		if ((time() - $latest_disc) >= $disc_period) {
 			$latest_disc = time();
-			if ($cycle_debug) echo date('H:i:s') . " Starting scan gates" . PHP_EOL;
+			if ($cycle_debug) echo date('H:i:s')." - Starting scan gates".PHP_EOL;
 			
 			$gates = SQLSelect("SELECT * FROM `okbit_gate`");
 			if ($gates[0]['ID']) {
 				$total = count($gates);
-				if ($cycle_debug) echo  "In base found - " . $total . " gates" . PHP_EOL;
-				for ($i = 0; $i < $total; $i++) {
-						
-					if ($cycle_debug) echo  "Gate ID - ". $gates[$i]['ID'] . "  IP: " . $gates[$i]['IP'] . PHP_EOL;
+				if ($cycle_debug) echo "In base found - " . $total . " gates" .PHP_EOL;
+				for ($i = 0; $i < $total; $i++) {						
+					if ($cycle_debug) echo "Gate ID - ". $gates[$i]['ID'] . "  IP: " . $gates[$i]['IP'] . PHP_EOL;
+					$gates[$i]['STATUS'] = 0;
+					SQLUpdate($table_gate_sql, $gates[$i]);																
 				}
 			}
-		}
-	   
-		  
-		//echo "Waiting for data ...".PHP_EOL;
-		
+			$okbit_module->test_update_gate();
+		}		  
+	
 		//Receive some data
 		@$r = socket_recvfrom($sock, $buf, 512, 0, $remote_ip, $remote_port);
 		
-		if ($buf != '') {
-			
-			$e_test = $okbit_module->udp_parsing($buf, $remote_ip);//передача полученного буфера данных для дальнейшего парсинга в основной модуль
+		if ($buf != '') {			
+			$package = $okbit_module->parsing_soc($buf, $remote_ip);//передача полученного буфера данных для дальнейшего парсинга в основной модуль
+			$package = $buf;
 			
 			if ($cycle_debug) {			
-			echo date("H:i:s") . " - $remote_ip : $remote_port " . "| Number of characters msg  - " . strlen($buf) .", " . $e_test  .PHP_EOL;
-			}
-			
+				echo date("H:i:s") . " - $remote_ip : $remote_port " . "| Number of characters msg  - " . strlen($buf) .", " . $package  .PHP_EOL;
+			}			
 							 
 			//Send back the data to the client
 			socket_sendto($sock, "000B", 100 , 0 , $remote_ip , $remote_port);
@@ -147,9 +128,6 @@
 		  exit;
 	   }
 	   
-
-   
-   
    sleep(1);
 }
 DebMes("Unexpected close of cycle: " . basename(__FILE__));

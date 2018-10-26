@@ -173,3 +173,14 @@ a.support-hover:hover .tip {
 a.support-hover-two:hover + .tip-block .tip-two {
  	display:block;
 }
+
+.okbit-tab
+{
+	margin-right:2px;
+	line-height:1.428571429;
+	border:1px solid transparent;
+	border-radius:4px 4px 0 0
+	position:relative;
+	display:block;
+	padding:10px 15px
+}

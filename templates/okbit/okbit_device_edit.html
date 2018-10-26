@@ -1,7 +1,6 @@
-<!-- Table 'miio_devices' edit -->
+<!-- Table device_okbit edit -->
 <form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
 	<fieldset>
-	
 	[#if OK#]
 	<div class="alert alert-success"><#LANG_DATA_SAVED#></div>
 	[#endif OK#]
@@ -10,8 +9,7 @@
 	<div class="alert alert-error"><#LANG_FILLOUT_REQURED#></div>
 	[#endif ERR#]
 	
-	
-		<input type="hidden" name="data_source" value="okbit_devices">
+	<input type="hidden" name="data_source" value="okbit_devices">
 		
 		<input type="hidden" name="parent_title" value="[#PARENT_TITLE#]">
 		
@@ -104,6 +102,8 @@
 		</div>
 		[#endif#]
 		
+		UPDATE - [#UPDATE#]
+		
 		<div class="form-group">
 			<div class="col-lg-offset-3 col-lg-4">
 				[#if ID!=""#]
@@ -111,7 +111,7 @@
 				[#else ID#]
 				<button type="submit" name="subm" value="Add" class="btn btn-primary"><#LANG_ADD#></button>
 				[#endif ID#]
-				<a href="?data_source=okbit_devices&view_mode=search_okbit_devices&parent_id=<#PARENT_ID#>&parent_title=<#PARENT_TITLE#>" class="btn btn-default "><#LANG_STRING_BACK#></a>
+				<a href="?data_source=okbit_device&view_mode=search_okbit_devices&parent_id=<#PARENT_ID#>&parent_title=<#PARENT_TITLE#>" class="btn btn-default "><#LANG_STRING_BACK#></a>
 				<input type="hidden" name="id" value="<#ID#>">
 				<input type="hidden" name="view_mode" value="<#VIEW_MODE#>">
 				<input type="hidden" name="edit_mode" value="<#EDIT_MODE#>">
@@ -122,3 +122,4 @@
 		</div>
 	</fieldset>
 </form>
+<!-- / Table device_okbit edit -->
