@@ -253,7 +253,7 @@ class Send_UDP {
 					}					
 					$com_reg = $cmd_dev[$udp_package['vol_1'] - 1]; //вычисляем топик okbit_date по номмеру регистра
 					
-					//$this->processCommand($cmd_gate['MOD'], $cmd_gate['ID'], $com_reg, $udp_package['vol_2']);//передаем данные на присвоение 
+					$this->processCommand($cmd_gate['MOD'], $cmd_gate['ID'], $com_reg, $udp_package['vol_2']);//передаем данные на присвоение 
 					
 					
 					if ($this->debug)DebMes('UDP parsing: GATE - '. $cmd_gate['MOD'] . ' ID - '. $cmd_gate['ID'] . ' REG - ' .$com_reg. ' VOL - ' .$udp_package['vol_2'], 'okbit');

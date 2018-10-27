@@ -401,7 +401,7 @@ class okbit extends module {
 		else $ip_serv = '0.0.0.0';
 		$gate_sh = SQLSelectOne("SELECT * FROM `okbit_gate` WHERE ID='".$id."'");//запрос для получения IP шлюза	
 			
-		$udppacket = new Build_package($this->config['API_LOG_DEBMES'],0, 0, 65534, 20, 0, 0);
+		$udppacket = new Build_package($this->config['API_LOG_DEBMES'],0, 0, 65534, 64, 0, 0);
 		$data_send = $udppacket->udp_msg_packet(); //сборка UDP OkBit пакета		
 		$gate = new Send_UDP($gate_sh['IP'], 6400, $ip_serv, 6600, $this->config['API_LOG_DEBMES']); //задаем свойства класса адрес и порт шлюза и порт модуля udp_send
 		$gate->sock_create(); //Создание UDP сокета
