@@ -269,7 +269,7 @@ class Send_UDP {
 				}
 
 				$table_name = 'okbit_gate';
-				$rec = SQLSelectOne("SELECT * FROM $table_name WHERE SN='".DBSafe($udp_package['vol_3'] . sprintf("%05d", $udp_package['vol_4']))."'");
+				$rec = SQLSelectOne("SELECT * FROM $table_name WHERE SN='".DBSafe(sprintf("%04X", $udp_package['vol_3']) . sprintf("%04X", $udp_package['vol_4']))."'");
 				
 				$rec['STATUS'] = 1;
 				$rec['UPDATED'] = date('Y-m-d H:i:s');
@@ -279,7 +279,7 @@ class Send_UDP {
 				
 				if ($rec['SN']) {
 					$rec['IP'] = $gate_ip;
-					$rec['SN'] = $udp_package['vol_3'] . sprintf("%05d", $udp_package['vol_4']);
+					$rec['SN'] = sprintf("%04X", $udp_package['vol_3']) . sprintf("%04X", $udp_package['vol_4']);
 					if ($this->debug) DebMes('Auto params for gate ' . $deb_title . ' with IP ' . $rec['IP'], 'okbit');
 					$rec['SN'] = SQLUpdate($table_name, $rec);
 				}
@@ -290,7 +290,7 @@ class Send_UDP {
 					$rec['UPDATED'] = date('Y-m-d H:i:s');
 					$rec['VER'] = $udp_package['vol_1'] . '.' . $udp_package['vol_2'];
 					if ($rec['IP'] && $rec['SN'] == '' && $rec['MOD'] == $udp_package['device']) {
-						$rec['SN'] = $udp_package['vol_3'] . sprintf("%05d", $udp_package['vol_4']);
+						$rec['SN'] = sprintf("%04X", $udp_package['vol_3']) . sprintf("%04X", $udp_package['vol_4']);
 						$rec['IP'] = SQLUpdate($table_name, $rec);
 					}
 					else {
@@ -300,7 +300,8 @@ class Send_UDP {
 						$rec['VER'] = $udp_package['vol_1'] . '.' . $udp_package['vol_2'];
 						$rec['IP'] = $gate_ip;
 						$rec['MOD'] = $udp_package['device'];
-						$rec['SN'] = $udp_package['vol_3'] . sprintf("%05d", $udp_package['vol_4']);
+						//$rec['SN'] = $udp_package['vol_3'] . sprintf("%05d", $udp_package['vol_4']);
+						$rec['SN'] = sprintf("%04X", $udp_package['vol_3']) . sprintf("%04X", $udp_package['vol_4']);
 						SQLInsert($table_name, $rec);
 						
 						if ($rec['MOD'] =='6000'){						
