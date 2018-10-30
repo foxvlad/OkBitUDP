@@ -161,6 +161,39 @@ if ($this->tab == 'data') {
 		if ($properties[$i]['LINKED_OBJECT'] && $properties[$i]['LINKED_PROPERTY']) {
 			addLinkedProperty($properties[$i]['LINKED_OBJECT'], $properties[$i]['LINKED_PROPERTY'], $this->name);
 		}
+		
+		if (file_exists(DIR_MODULES . 'devices/devices.class.php')) {
+			if ($properties[$i]['TITLE'] == 'power') $properties[$i]['SDEVICE_TYPE'] = 'relay';
+			elseif ($properties[$i]['TITLE'] == 'Lamp1') $properties[$i]['SDEVICE_TYPE'] = 'relay';
+			elseif ($properties[$i]['TITLE'] == 'Lamp2') $properties[$i]['SDEVICE_TYPE'] = 'relay';
+			elseif ($properties[$i]['TITLE'] == 'Reley') $properties[$i]['SDEVICE_TYPE'] = 'relay';
+			elseif ($properties[$i]['TITLE'] == 'Temp') $properties[$i]['SDEVICE_TYPE'] = 'sensor_temp';
+			elseif ($properties[$i]['TITLE'] == 'Humidity') $properties[$i]['SDEVICE_TYPE'] = 'sensor_humidity';	
+			elseif ($properties[$i]['TITLE'] == 'Status1') $properties[$i]['SDEVICE_TYPE'] = 'motion';	
+			elseif ($properties[$i]['TITLE'] == 'Status2') $properties[$i]['SDEVICE_TYPE'] = 'motion';
+			
+			
+			/*
+			Управляемое реле/Выключатель  			relay
+			Управляемый диммер  					dimmer
+			RGB-контроллер  						rgb
+			Датчик движения  						motion
+			Кнопка  								button
+			Датчик открытия/закрытия  				openclose
+			Датчик температуры  					sensor_temp
+			Датчик влажности  						sensor_humidity
+			Датчик состояния  						sensor_state
+			Датчик процентное значение  			sensor_percentage
+			Датчик атмосферного давления  			sensor_pressure
+			Датчик мощности  						sensor_power
+			Датчик напряжения 	 					sensor_voltage
+			Датчик тока  							sensor_current
+			Датчик освещённости  					sensor_light
+			Датчик протечки  						leak
+			Датчик дыма  							smoke
+			Счётчик  								counter
+			*/
+		}
 	
 		
 	}

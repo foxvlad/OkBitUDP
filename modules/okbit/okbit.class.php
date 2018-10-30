@@ -41,7 +41,7 @@ define ('DATA_6008', 'IND1,IND2,IND3,IND4,INA1,INA2,INA3,INA4');
 
 define ('DATA_7001', 'Lamp1,Lamp2');
 define ('DATA_7002', 'Temp,Humidity');
-define ('DATA_7003', 'Rele');
+define ('DATA_7003', 'Reley');
 define ('DATA_7004', 'Red,Green,Blue');
 define ('DATA_7005', 'Lamp,Level');
 define ('DATA_7006', 'Status1,Status1');
