@@ -9,7 +9,7 @@
 */
 
 
-define ('OKBIT_GATE_CODES', serialize (array(	'6000' =>	'GATE UDP-RS485',
+define ('OKBIT_GATE_CODES', serialize (array(	'6000' =>	'GATE Ethernet-RS485',
 												'7001' =>	'ESP Lamp',
 												'7002' =>	'ESP Climatic',
 												'7003' =>	'ESP Rele',
