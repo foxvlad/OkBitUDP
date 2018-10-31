@@ -54,7 +54,7 @@ class Send_UDP {
 		else if ($this->debug) DebMes ("Socket bind OK", 'okbit');
 	}
 	
-	public function sockSetTimeout($timeout = 2) { // установка тайм аута для отправке получения пакета, в случае если шлюз не доступен
+	public function sockSetTimeout($timeout = 1) { // установка тайм аута для отправке получения пакета, в случае если шлюз не доступен
 		if (!socket_set_option($this->sock, SOL_SOCKET, SO_RCVTIMEO, array("sec" => $timeout, "usec" => 0))) {
 			$errorcode = socket_last_error();
 			$errormsg = socket_strerror($errorcode);
@@ -373,8 +373,12 @@ class Send_UDP {
 			
 			
 		if ($cmd_rec['ID']) {
-				
-			$cmd_rec['VALUE'] = $value;
+			if ($mod == '7002') {
+				$value = ($value / 100);				
+			}
+							
+				$cmd_rec['VALUE'] = $value;
+			
 			$cmd_rec['UPDATED'] = date('Y-m-d H:i:s');
 			SQLUpdate('okbit_data', $cmd_rec);
 
