@@ -24,16 +24,16 @@
 						</div>
 						<p class="float-left">
 							<#LANG_OKBIT_APP_MODULE#><br><br>
-							Обсуждение модуля на <a href="https://majordomo.smartliving.ru/forum/" target="_blank">форуме</a>.<br>
-							Проект на <a href="https://github.com/foxvlad/OkBitUDP" target="_blank">Github</a>.<br>
-							Проект в <a href="https://connect.smartliving.ru/profile/1160" target="_blank">Connect</a>.<br>
+							<#LANG_OKBIT_APP_DISCUS#><a href="https://majordomo.smartliving.ru/forum/" target="_blank"><#LANG_OKBIT_APP_DISCUS2#></a>.<br>
+							<#LANG_OKBIT_APP_PROJ#> <a href="https://github.com/foxvlad/OkBitUDP" target="_blank">GitHub</a>.<br>
+							<#LANG_OKBIT_APP_CONNECT#><a href="https://connect.smartliving.ru/profile/1160" target="_blank">Connect</a>.<br>
 						</p>
 						
-						<h6>Благодарности: <b>skysilver</b>, <b>Aven</b>, <b>Egor Savenko</b></h6>
+						<h6><#LANG_OKBIT_APP_THANKS#> <b>skysilver</b>, <b>Aven</b>, <b>Egor Savenko</b></h6>
 					</div>
 					<div class="modal-footer">
 						<div class="pull-left"><#LANG_OKBIT_APP_Author#>: <a href="http://okbit.ru" target="_blank">foxvlad</a></div>
-						<button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal"><#LANG_OKBIT_APP_CLOSE#></button>
 					</div>
 				</div>
 			</div>
@@ -57,7 +57,7 @@
 			<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
 				<fieldset>
 					<div class="form-group">
-						<label class="control-label">IP адрес 
+						<label class="control-label"><#LANG_OKBIT_APP_IP_SERVER#>
 						<span class='support-hover' tabindex="1" data-title="<#LANG_OKBIT_APP_IP_TOOLTIP#>">
 							<i class="glyphicon glyphicon-info-sign"></i>
 						</span>
@@ -77,7 +77,7 @@
 					
 					<div class="form-group">
 						<div class="controls"><input type="checkbox" name="api_log_debmes" value="1"[#if API_LOG_DEBMES="1"#] checked[#endif#]> 
-							Отладка DebMes
+							<#LANG_OKBIT_APP_DEBUG#> DebMes
 							<span class='support-hover' tabindex="1" data-title="<#LANG_OKBIT_APP_DEBUG_TOOLTIP#>">
 								<i class="glyphicon glyphicon-info-sign"></i>
 							</span>
@@ -86,7 +86,7 @@
 					
 					<div class="form-group">
 						<div class="controls"><input type="checkbox" name="api_log_cycle" value="1"[#if API_LOG_CYCLE="1"#] checked[#endif#]> 
-							Отладка Cycle
+							<#LANG_OKBIT_APP_DEBUG#> Cycle
 							<span class='support-hover' tabindex="1" data-title="<#LANG_OKBIT_APP_DEBUG_TOOLTIP2#>">
 								<i class="glyphicon glyphicon-info-sign"></i>
 							</span>
