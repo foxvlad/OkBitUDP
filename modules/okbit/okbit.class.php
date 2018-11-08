@@ -39,7 +39,7 @@ define ('DATA_6006', 'IND1,IND2,IND3,IND4,INA1,INA2,INA3,INA4');
 define ('DATA_6007', 'IND1,IND2,IND3,IND4,INA1,INA2,INA3,INA4');
 define ('DATA_6008', 'IND1,IND2,IND3,IND4,INA1,INA2,INA3,INA4');
 
-define ('DATA_7001', 'Lamp1,Lamp2,Lamp3');
+define ('DATA_7001', 'Lamp1,Lamp2,Lamp3,Lamp4');
 define ('DATA_7002', 'Temp,Humidity');
 define ('DATA_7003', 'Reley');
 define ('DATA_7004', 'Red,Green,Blue');
@@ -502,7 +502,7 @@ class okbit extends module {
 			$gate->sock_create(); //Создание UDP сокета
 			$gate->sockSetTimeout(1); //Установка таймаута для получения ответа
 			$gate->sock_bind();
-			$gate->udp_send($data_send); // отправка пакета
+			$gate->udp_send_no_remote($data_send); // отправка пакета
 		}		
 		
 		else if ($properties['ETHERNET'] == '0') {
@@ -546,7 +546,7 @@ class okbit extends module {
 			$gate->sock_create(); //Создание UDP сокета
 			$gate->sockSetTimeout(1); //Установка таймаута для получения ответа
 			$gate->sock_bind();
-			$gate->udp_send($data_send); // отправка пакета
+			$gate->udp_send_no_remote($data_send); // отправка пакета
 		}
 		
 	}

@@ -121,6 +121,32 @@ class Send_UDP {
 	}
 	
 	
+	
+		public function udp_send_no_remote($udpPacket){			
+		$this->data = $udpPacket;	
+				 
+		//Отправка сообщения на шлюз
+		if(!($bytes = socket_sendto($this->sock, $this->data, strlen($this->data) , 0 ,  $this->ip_gate,  $this->port_gate))){
+			$errorcode = socket_last_error();
+			$errormsg = socket_strerror($errorcode);
+			if ($this->debug) DebMes ("Cannot send data to socket [$errorcode] $errormsg", 'okbit');
+			
+		} else if ($this->debug){	
+			DebMes (">>>>> $this->data", 'okbit');
+			DebMes (">>>>> Sent $bytes bytes to socket", 'okbit');
+		}			
+	
+		$buf = '';
+		$count = 0;
+	
+		socket_shutdown($this->sock, 2);
+		socket_close($this->sock);		
+	}
+	
+	
+	
+	
+	
 	/**
 	* parsing_packege
 	*

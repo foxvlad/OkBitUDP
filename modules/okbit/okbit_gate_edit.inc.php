@@ -167,6 +167,7 @@ if ($this->tab == 'data') {
 			elseif ($properties[$i]['TITLE'] == 'Lamp1') $properties[$i]['SDEVICE_TYPE'] = 'relay';
 			elseif ($properties[$i]['TITLE'] == 'Lamp2') $properties[$i]['SDEVICE_TYPE'] = 'relay';
 			elseif ($properties[$i]['TITLE'] == 'Lamp3') $properties[$i]['SDEVICE_TYPE'] = 'relay';
+			elseif ($properties[$i]['TITLE'] == 'Lamp4') $properties[$i]['SDEVICE_TYPE'] = 'relay';
 			elseif ($properties[$i]['TITLE'] == 'Reley') $properties[$i]['SDEVICE_TYPE'] = 'relay';
 			elseif ($properties[$i]['TITLE'] == 'Temp') $properties[$i]['SDEVICE_TYPE'] = 'sensor_temp';
 			elseif ($properties[$i]['TITLE'] == 'Humidity') $properties[$i]['SDEVICE_TYPE'] = 'sensor_humidity';	
