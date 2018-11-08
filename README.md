@@ -10,4 +10,6 @@ Module of communication with devices based on ESP8266 and devices on the RS485 b
 
 Firmware devices will be gradually added
 
-![Device list](https://github.com/foxvlad/IMG/blob/master/2018-11-08_23-25-07.png)
+![Device list](https://github.com/foxvlad/IMG/blob/master/2018-11-08_23-59-50.png)
+![Data received from the device](https://github.com/foxvlad/IMG/blob/master/2018-11-09_00-00-01.png)
+
