@@ -9,3 +9,5 @@ Module of communication with devices based on ESP8266 and devices on the RS485 b
 * ready firmware with the web Configurator for the ESP8266 (https://github.com/foxvlad/ESPLampWeb)
 
 Firmware devices will be gradually added
+
+![Device list](https://github.com/foxvlad/IMG/blob/master/2018-11-08_23-25-07.png)
