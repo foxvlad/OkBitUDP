@@ -50,7 +50,16 @@ $dictionary = array(
 'OKBIT_APP_ADD_GATE' => 'Добавить устройство',
 'OKBIT_APP_ADD_DEVICE' => 'Добавить модуль',
 'OKBIT_APP_FIND_DEVICES' => 'Поиск модулей',
-'OKBIT_APP_INFO' => 'Информация'
+'OKBIT_APP_INFO' => 'Информация',
+'OKBIT_APP_IP_SERVER' => 'IP-сервера ',
+'OKBIT_APP_DEVICE_ONLINE' => 'Устройство доступно',
+'OKBIT_APP_DEVICE_OFFLINE' => 'Устройство не доступно',
+'OKBIT_APP_INFO_DEVICE' => 'Пулучить актуальную информацию',
+'OKBIT_APP_BIND_GATE' => 'Подвязать сервер к устройству',
+'OKBIT_APP_DEVICES_IN_GATE' => 'Устройства на шлузе',
+'OKBIT_APP_EDIT' => 'Править',
+'OKBIT_APP_DEITE' => 'Удалить',
+'OKBIT_APP_REMOVAL_REQUEST' => 'Уверены что хотите удалить? Подтвердите для продолжения'
 );
 
 foreach ($dictionary as $k=>$v)
