@@ -79,6 +79,10 @@ if ($this->mode == 'update') {
 			$in_out = explode(',',DATA_7006);
 		}
 		
+		else if ($rec['MOD'] =='7007'){
+			$in_out = explode(',',DATA_7007);
+		}
+		
 				
 	}
 

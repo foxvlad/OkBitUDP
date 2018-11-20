@@ -402,8 +402,12 @@ class Send_UDP {
 			if ($mod == '7002') {
 				$value = ($value / 100);				
 			}
+			
+			if ($mod == '7007' && ($command == 'Temp' || $command == 'SetTemp' || $command == 'Hysteresis') ) {
+				$value = ($value / 100);				
+			}
 							
-				$cmd_rec['VALUE'] = $value;
+			$cmd_rec['VALUE'] = $value;
 			
 			$cmd_rec['UPDATED'] = date('Y-m-d H:i:s');
 			SQLUpdate('okbit_data', $cmd_rec);

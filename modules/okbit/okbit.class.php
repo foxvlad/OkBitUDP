@@ -15,7 +15,8 @@ define ('OKBIT_GATE_CODES', serialize (array(	'6000' =>	'GATE Ethernet-RS485',
 												'7003' =>	'ESP Rele',
 												'7004' =>	'ESP LED RGB',
 												'7005' =>	'ESP Dimmer',
-												'7006' =>	'ESP Sensor'
+												'7006' =>	'ESP Sensor',
+												'7007' =>	'ESP Thermostat'
 												)));
 
 
@@ -45,6 +46,7 @@ define ('DATA_7003', 'Reley');
 define ('DATA_7004', 'Red,Green,Blue');
 define ('DATA_7005', 'Lamp,Level');
 define ('DATA_7006', 'Status1,Status1');
+define ('DATA_7007', 'ST_Relay,Mode,Temp,SetTemp,Hysteresis,Set');
 
 class okbit extends module {
 	
@@ -489,12 +491,20 @@ class okbit extends module {
 			}
 			else if ($gate_sh['MOD'] == 7006){
 				$cmd_out = explode(',',DATA_7006);
+			}			
+			else if ($gate_sh['MOD'] == 7007){
+				$cmd_out = explode(',',DATA_7007);
 			}
+			
 			$s = 1;
 			foreach($cmd_out as $xxx) {
 				if ($xxx == $properties['TITLE']) $dev_in = $s;
 				$s++;
-			}			
+			}
+			
+			if ($gate_sh['MOD'] == 7007 && ($dev_in == 4 || $dev_in == 5) ) { // дополнение для предачи данных с запятой, путем умножения на 100
+				$value = $value*100;
+			}
 				
 			$udppacket = new Build_package($this->config['API_LOG_DEBMES'],0, 0, 65534, 30, 0, 0, $dev_in, $value);
 			$data_send = $udppacket->udp_msg_packet(); //сборка UDP OkBit пакета		
