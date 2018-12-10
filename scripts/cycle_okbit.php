@@ -108,7 +108,7 @@
 		@$r = socket_recvfrom($sock, $buf, 512, 0, $remote_ip, $remote_port);
 		
 		if ($buf != '') {			
-			$package = $okbit_module->parsing_soc($buf, $remote_ip);//передача полученного буфера данных для дальнейшего парсинга в основной модуль
+			$package = $okbit_module->parsing_packege($buf, $remote_ip);//передача полученного буфера данных для дальнейшего парсинга в основной модуль
 			$package = $buf;
 			
 			if ($cycle_debug) {			

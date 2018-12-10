@@ -50,7 +50,7 @@ define ('DATA_7007', 'ST_Relay,Mode,Temp,SetTemp,Hysteresis,Set');
 
 class okbit extends module {
 	
-	
+	public $sock;
 	
 	/**
 	* okbit
@@ -215,8 +215,14 @@ class okbit extends module {
 			global $api_log_cycle;
 			$this->config['API_LOG_CYCLE'] = (int)$api_log_cycle;
 			
+						
 			$this->saveConfig();
+			
+			setGlobal('cycle_okbitControl','restart');
+			
 			$this->redirect("?");
+			
+
 		}
 		if (isset($this->data_source) && !$_GET['data_source'] && !$_POST['data_source']) {
 			$out['SET_DATASOURCE']=1;
@@ -315,22 +321,37 @@ class okbit extends module {
 	* @access public
 	*/
 	function discover_okbit_gate(&$out) {
-		require_once(DIR_MODULES.$this->name . '/lib/build_package_okbit.class.php');		
-		require_once(DIR_MODULES.$this->name . '/lib/send_udp_okbit.class.php');
 	
 		if($this->config['API_IP']) $ip_serv = $this->config['API_IP'];	
 		else $ip_serv = '0.0.0.0';
 		
-		$udppacket = new Build_package($this->config['API_LOG_DEBMES'],0, 0, 65534, 255, 0, 0);
-		$data_send = $udppacket->udp_msg_packet(); //сборка UDP OkBit пакета		
-		$gate = new Send_UDP('255.255.255.255', 6400, $ip_serv, 6600, $this->config['API_LOG_DEBMES']); //задаем свойства класса адрес и порт шлюза и порт модуля udp_send
-		$gate->sock_create(); //Создание UDP сокета
-		$gate->sockSetTimeout(10); //Установка таймаута для получения ответа
-		$gate->sock_bind();
-		$gate->sockSetBroadcast();
-		$gate->udp_send($data_send); // отправка пакета
-		
+		$data_send = $this->udp_msg_packet($this->config['API_LOG_DEBMES'] ,0, 0, 65534, 255, 0, 0); //сборка UDP OkBit пакета		
+		$this->sock_create(); //Создание UDP сокета
+		$this->sockSetTimeout(10); //Установка таймаута для получения ответа
+		$this->sock_bind($ip_serv, 6600);
+		$this->sockSetBroadcast();
+		$this->udp_send('255.255.255.255', 6400, $data_send); // отправка пакета
+				
 		$this->redirect("?data_source=okbit_gate");		
+	}
+	
+	
+	/**
+	* test_update_gate
+	*
+	* @access public
+	*/
+	function test_update_gate() {
+	
+		if($this->config['API_IP']) $ip_serv = $this->config['API_IP'];	
+		else $ip_serv = '0.0.0.0';
+		
+		$data_send = $this->udp_msg_packet($this->config['API_LOG_DEBMES'] ,0, 0, 65534, 255, 0, 0); //сборка UDP OkBit пакета		
+		$this->sock_create(); //Создание UDP сокета
+		$this->sockSetTimeout(1); //Установка таймаута для получения ответа
+		$this->sock_bind($ip_serv, 6600);
+		$this->sockSetBroadcast();
+		$this->udp_send('255.255.255.255', 6400, $data_send); // отправка пакета	
 	}
 	
 	
@@ -342,51 +363,22 @@ class okbit extends module {
 	*/
 	
 	function okbit_update_gate(&$out, $id) {
-		require_once(DIR_MODULES.$this->name . '/lib/build_package_okbit.class.php');		
-		require_once(DIR_MODULES.$this->name . '/lib/send_udp_okbit.class.php');
-		
+
 		if($this->config['API_IP']) $ip_serv = $this->config['API_IP'];	
 		else $ip_serv = '0.0.0.0';
 		$gate_sh = SQLSelectOne("SELECT * FROM `okbit_gate` WHERE ID='".$id."'");//запрос для получения IP шлюза	
 	
-		$udppacket = new Build_package($this->config['API_LOG_DEBMES'],0, 0, 65534, 20, 0, 0);
-		$data_send = $udppacket->udp_msg_packet(); //сборка UDP OkBit пакета		
-		$gate = new Send_UDP($gate_sh['IP'], 6400, $ip_serv, 6600, $this->config['API_LOG_DEBMES']); //задаем свойства класса адрес и порт шлюза и порт модуля udp_send
-		$gate->sock_create(); //Создание UDP сокета
-		$gate->sockSetTimeout(1); //Установка таймаута для получения ответа
-		$gate->sock_bind();
-		//$gate->sockSetBroadcast();
-		$gate->udp_send($data_send); // отправка пакета
-		
-		
+		$data_send = $this->udp_msg_packet($this->config['API_LOG_DEBMES'],0, 0, 65534, 20, 0, 0); //сборка UDP OkBit пакета		
+		$this->sock_create(); //Создание UDP сокета
+		$this->sockSetTimeout(1); //Установка таймаута для получения ответа
+		$this->sock_bind($ip_serv, 6600);
+		$this->udp_send($gate_sh['IP'], 6400, $data_send); // отправка пакета
+				
 		$this->redirect("?data_source=okbit_gate");	
 	}	
 	
 	
 	
-	/**
-	* test_update_gate
-	*
-	* @access public
-	*/
-	
-	function test_update_gate() {
-		require_once(DIR_MODULES.$this->name . '/lib/build_package_okbit.class.php');		
-		require_once(DIR_MODULES.$this->name . '/lib/send_udp_okbit.class.php');	
-		
-		if($this->config['API_IP']) $ip_serv = $this->config['API_IP'];	
-		else $ip_serv = '0.0.0.0';
-				
-		$udppacket = new Build_package($this->config['API_LOG_DEBMES'],0, 0, 65534, 20, 0, 0);
-		$data_send = $udppacket->udp_msg_packet(); //сборка UDP OkBit пакета		
-		$gate = new Send_UDP('255.255.255.255', 6400, $ip_serv, 6600, $this->config['API_LOG_DEBMES']); //задаем свойства класса адрес и порт шлюза и порт модуля udp_send
-		$gate->sock_create(); //Создание UDP сокета
-		$gate->sockSetTimeout(1); //Установка таймаута для получения ответа
-		$gate->sock_bind();
-		$gate->sockSetBroadcast();
-
-		$gate->udp_send($data_send); // отправка пакета
-	}	
 	
 	
 	/**
@@ -396,21 +388,18 @@ class okbit extends module {
 	*/
 	
 	function okbit_bind_gate(&$out, $id) {
-		require_once(DIR_MODULES.$this->name . '/lib/build_package_okbit.class.php');		
-		require_once(DIR_MODULES.$this->name . '/lib/send_udp_okbit.class.php');
 		
 		if($this->config['API_IP']) $ip_serv = $this->config['API_IP'];	
 		else $ip_serv = '0.0.0.0';
 		$gate_sh = SQLSelectOne("SELECT * FROM `okbit_gate` WHERE ID='".$id."'");//запрос для получения IP шлюза	
 			
-		$udppacket = new Build_package($this->config['API_LOG_DEBMES'],0, 0, 65534, 64, 0, 0);
-		$data_send = $udppacket->udp_msg_packet(); //сборка UDP OkBit пакета		
-		$gate = new Send_UDP($gate_sh['IP'], 6400, $ip_serv, 6600, $this->config['API_LOG_DEBMES']); //задаем свойства класса адрес и порт шлюза и порт модуля udp_send
-		$gate->sock_create(); //Создание UDP сокета
-		$gate->sockSetTimeout(1); //Установка таймаута для получения ответа
-		$gate->sock_bind();
-		//$gate->sockSetBroadcast();
-		$gate->udp_send($data_send); // отправка пакета
+		$data_send = $this->udp_msg_packet($this->config['API_LOG_DEBMES'],0, 0, 65534, 64, 0, 0); //сборка UDP OkBit пакета		
+		$this->sock_create(); //Создание UDP сокета
+		$this->sockSetTimeout(1); //Установка таймаута для получения ответа
+		$this->sock_bind($ip_serv, 6600);
+		$this->udp_send($gate_sh['IP'], 6400, $data_send); // отправка пакета
+		
+		$gate = NULL;
 		
 		$this->redirect("?data_source=okbit_gate");	
 	}
@@ -459,8 +448,6 @@ class okbit extends module {
 	*/
 	
 	function propertySetHandle($object, $property, $value) {
-		require_once(DIR_MODULES.$this->name . '/lib/build_package_okbit.class.php');		
-		require_once(DIR_MODULES.$this->name . '/lib/send_udp_okbit.class.php');		
 		
 		$this->getConfig();		
 		if($this->config['API_IP']) $ip_serv = $this->config['API_IP'];	
@@ -506,13 +493,11 @@ class okbit extends module {
 				$value = $value*100;
 			}
 				
-			$udppacket = new Build_package($this->config['API_LOG_DEBMES'],0, 0, 65534, 30, 0, 0, $dev_in, $value);
-			$data_send = $udppacket->udp_msg_packet(); //сборка UDP OkBit пакета		
-			$gate = new Send_UDP($gate_sh['IP'], 6400, $ip_serv, 6600, $this->config['API_LOG_DEBMES']); //задаем свойства класса адрес и порт шлюза и порт модуля udp_send
-			$gate->sock_create(); //Создание UDP сокета
-			$gate->sockSetTimeout(1); //Установка таймаута для получения ответа
-			$gate->sock_bind();
-			$gate->udp_send_no_remote($data_send); // отправка пакета
+			$data_send = $this->udp_msg_packet($this->config['API_LOG_DEBMES'],0, 0, 65534, 30, 0, 0, $dev_in, $value); //сборка UDP OkBit пакета		
+			$this->sock_create(); //Создание UDP сокета
+			$this->sockSetTimeout(1); //Установка таймаута для получения ответа
+			$this->sock_bind($ip_serv, 6600);
+			$this->udp_send($gate_sh['IP'], 6400, $data_send); // отправка пакета
 		}		
 		
 		else if ($properties['ETHERNET'] == '0') {
@@ -550,32 +535,18 @@ class okbit extends module {
 				$s++;
 			}			
 			
-			$udppacket = new Build_package($this->config['API_LOG_DEBMES'],$rs485['SUB_ID'], 0, 65534, 30, $rs485['SUB_ID'], $rs485['DEVICE_ID'], $dev_in, $value);
-			$data_send = $udppacket->udp_msg_packet(); //сборка UDP OkBit пакета	
-			$gate = new Send_UDP($gate_sh['IP'], 6400, $ip_serv, 6600, $this->config['API_LOG_DEBMES']); //задаем свойства класса адрес и порт шлюза и порт модуля udp_send
-			$gate->sock_create(); //Создание UDP сокета
-			$gate->sockSetTimeout(1); //Установка таймаута для получения ответа
-			$gate->sock_bind();
-			$gate->udp_send_no_remote($data_send); // отправка пакета
+			$data_send = $this->udp_msg_packet($this->config['API_LOG_DEBMES'],$rs485['SUB_ID'], 0, 65534, 30, $rs485['SUB_ID'], $rs485['DEVICE_ID'], $dev_in, $value); //сборка UDP OkBit пакета	
+			$this->sock_create(); //Создание UDP сокета
+			$this->sockSetTimeout(1); //Установка таймаута для получения ответа
+			$this->sock_bind($ip_serv, 6600);
+			$this->udp_send($gate_sh['IP'], 6400, $data_send); // отправка пакета
 		}
+		
 		
 	}
 	
 	
-	/**
-	* udp_parsing
-	*
-	* Парсинг полученных данных
-	*
-	* @access private
-	*/	
-	
-	function parsing_soc($buf_cmd, $gate_ip){ //Парсинг полученного UDP-пакета
-	
-		$pars = new Send_UDP();
-		if ($this->config['API_LOG_DEBMES'])$pars->debug=true;
-		$pars->parsing_packege($buf_cmd, $gate_ip);	
-	}
+
 	
 	
 	
@@ -623,21 +594,17 @@ class okbit extends module {
 	* @access public
 	*/
 	function okbit_devices_discover(&$out, $parent_title, $parent_id) {
-		require_once(DIR_MODULES.$this->name . '/lib/build_package_okbit.class.php');		
-		require_once(DIR_MODULES.$this->name . '/lib/send_udp_okbit.class.php');
 		
 		if($this->config['API_IP']) $ip_serv = $this->config['API_IP'];	
 		else $ip_serv = '0.0.0.0';		
 
 		$gate_sh = SQLSelectOne("SELECT * FROM `okbit_gate` WHERE ID='".$parent_id."'");//запрос для получения IP шлюза	
-		$udppacket = new Build_package($this->config['API_LOG_DEBMES'],0, 0, 65534, 20, 0, 0);
-		$data_send = $udppacket->udp_msg_packet(); //сборка UDP OkBit пакета		
-		$gate = new Send_UDP($gate_sh['IP'], 6400, $ip_serv, 6600, $this->config['API_LOG_DEBMES']); //задаем свойства класса адрес и порт шлюза и порт модуля udp_send
-		$gate->sock_create(); //Создание UDP сокета
-		$gate->sockSetTimeout(10); //Установка таймаута для получения ответа
-		$gate->sock_bind();
-		//$gate->sockSetBroadcast();
-		$gate->udp_send($data_send); // отправка пакета
+		$data_send = $this->udp_msg_packet($this->config['API_LOG_DEBMES'],0, 0, 65534, 20, 0, 0); //сборка UDP OkBit пакета		
+		$this->sock_create(); //Создание UDP сокета
+		$this->sockSetTimeout(1); //Установка таймаута для получения ответа
+		$this->sock_bind($ip_serv, 6600);
+		$this->udp_send($gate_sh['IP'], 6400, $data_send); // отправка пакета
+	
 		
 		$this->redirect("?data_source=okbit_device&view_mode=search_okbit_devices&parent_title=$parent_title&parent_id=$parent_id");	
 	}
@@ -651,8 +618,6 @@ class okbit extends module {
 	*/
 	
 	function okbit_devices_update(&$out, $parent_title, $parent_id, $id) {
-		require_once(DIR_MODULES.$this->name . '/lib/build_package_okbit.class.php');		
-		require_once(DIR_MODULES.$this->name . '/lib/send_udp_okbit.class.php');
 		
 		if($this->config['API_IP']) $ip_serv = $this->config['API_IP'];	
 		else $ip_serv = '0.0.0.0';
@@ -660,14 +625,11 @@ class okbit extends module {
 		$cmd_up = SQLSelectOne("SELECT * FROM `okbit_devices` WHERE ID=".(int)$id);
 		$cmd_up_gate = SQLSelectOne("SELECT * FROM `okbit_gate` WHERE ID=".(int)$parent_id);		
 		
-		$udppacket = new Build_package($this->config['API_LOG_DEBMES'],$cmd_up['SUB_ID'], 0, 65534, 21, $cmd_up['SUB_ID'], $cmd_up['DEVICE_ID']);
-		$data_send = $udppacket->udp_msg_packet(); //сборка UDP OkBit пакета		
-		$gate = new Send_UDP($cmd_up_gate['IP'], 6400, $ip_serv, 6600, $this->config['API_LOG_DEBMES']); //задаем свойства класса адрес и порт шлюза и порт модуля udp_send
-		$gate->sock_create(); //Создание UDP сокета
-		$gate->sockSetTimeout(1); //Установка таймаута для получения ответа
-		$gate->sock_bind();
-		$gate->sockSetBroadcast();
-		$gate->udp_send($data_send); // отправка пакета
+		$data_send = $this->udp_msg_packet($this->config['API_LOG_DEBMES'],$cmd_up['SUB_ID'], 0, 65534, 21, $cmd_up['SUB_ID'], $cmd_up['DEVICE_ID']); //сборка UDP OkBit пакета		
+		$this->sock_create(); //Создание UDP сокета
+		$this->sockSetTimeout(1); //Установка таймаута для получения ответа
+		$this->sock_bind($ip_serv, 6600);
+		$this->udp_send($gate_sh['IP'], 6400, $data_send); // отправка пакета
 				
 		$this->redirect("?data_source=okbit_device&view_mode=search_okbit_devices&parent_title=$parent_title&parent_id=$parent_id");
 	}
@@ -686,6 +648,599 @@ class okbit extends module {
 		
 		SQLExec("DELETE FROM `okbit_devices` WHERE ID='" .$rec['ID']."'");
 		
+	}
+	
+	
+	
+	/**
+	* udp_msg_packet(
+	* 
+	* @access public
+	*
+	* -------- Значение команд в десятичном/шестнадцатиричном формате ---------
+	* 
+	* 0010/A - считать SN шлюза, версию прощивки
+	* 0011/B - ответ все хорошо
+	* 0012/С - ответ ошибка (1 - колличество ошибок в ОЗУ, 2- код последней ошибки)
+	* 0013/D - передать SN шлюза, версию прощивки (1 - Значение прошивки 1, 2 - значение прошивки 2, 3 - серийный номер 1, 4 - серийный номер 2)
+	* 
+	* 0020/14 - Поиск всех онлайн устройств
+	* 0021/15 - Считать/передать тип устройства, версию прошивки (1- тип устройства, 2 - версия)
+	* 0022/16 - Считат/передать коментарий устройства(n-е количество буквенный коментарий)
+	* 0023/17 - Считать/передать статус входа (1 - адрес входа, 2- значение)
+	* 0024/18 - Считать/передать значение ячейки ОЗУ (1 - адрес ячейки, 2 - значение)
+	* 0025/19 - Считать/передать все значения ячеек ОЗУ
+	* 0026/1A - Считать/передать количество ошибок на шине ( 1- кол-воошибок)
+	* 
+	* 0030/1E - Присвоение значения ОЗУ (1 - адрес канал, 2 - значение)
+	* 0031/1F - Присвоение двух значений ОЗУ (1 - адрес канала, 2 - значение 1, 3 - значение 2)
+	* 
+	* 0040/28 - Смена Sub ID (1 - новый адрес подсети)
+	* 0041/29 - Смена ID (1 - новый адрес устройства)
+	* 
+	* 0055/37 - Запись текстового значения (примечание для модуля)
+	* 
+	* 0060/3C - Запись значения настройки в модуль (1 - адрес канала, 2 - значение )
+	* 0061/3D - Запись значений настройки в модуль (1 - адрес канала, 2 - значение 1, 3- значение 2)
+	* 0062/3D - смена IP шлюза (1 - адрес, 2 - адрес, 3 - адрес, 4 - адрес)
+	* 0063/3F - Работа шлюза по DHCP
+	* 0064/40 - Привязать шлюз к серверу
+	* 
+	* 
+	* 0070/46 - Запись значения сценария (1 - адрес канала,  2 - N -сценария, 3 - Sub ID получателя, 4 - id получателя , 5 - адрес канала ОЗУ,
+	* 			6 - значение 1, 7 - значение 2)
+	*/
+
+	
+
+
+	function udp_msg_packet($debug=false, $sub_id = NULL, $id = NULL, $device = NULL, $cmd = NULL, $subto_id = NULL, $to_id = NULL, $value1 = NULL, $value2 = NULL, $value3 = NULL, $value4 = NULL) {  //Функция сборки пакета
+		if ($cmd == 10 || $cmd == 20 || $cmd == 21 || $cmd == 22 || $cmd == 25 || $cmd == 26 || $cmd == 64 ||  $cmd == 255 ) { // Запрос без переменной только команда
+			$length = 9;
+		}
+		else if ($cmd == 23 || $cmd == 24 ) { // Считать статус  - передается 1 парматр
+			$length = 11;
+		}
+		else if ($cmd == 30){// Присвоение одного значение ОЗУ, передается два параметра:  адрес канала ОЗУ, значение)
+			$length = 13;
+		}
+		else if ($cmd == 31) { // Присвоение двух значений ОЗУ, передается три параметра: адрес канала ОЗУ, значение 1, значение 2)
+			$length = 15;
+		}
+		else if ($cmd == 13) { // Присвоение двух значений ОЗУ, передается три параметра: адрес канала ОЗУ, значение 1, значение 2)
+			$length = 17;
+		}
+		$date_array = array(   // Собираем массив данных для строки UDP -запроса
+			"title"=>$this->val_set_edit("OKBIT-UDP")[0], 			// Текствое собщение протокола
+			"s_cod" => sprintf('%02X', 0xAAAA),            			// Стартовый ярлык
+			"length" => sprintf('%02X', $length),					// Длины сообщения
+			"sub_id" => sprintf('%02X', $sub_id),				// Sub ID отправителя
+			"id" => sprintf('%02X', $id),						// ID отправителя
+			"device_HI"=> sprintf('%02X', $device >> 8),		// Вырхний байт кода модуля
+			"device_LOW"=> sprintf('%02X', $device & 0xFF),	// Нижний байт кода модуля
+			"cmd_HI"=> sprintf('%02X', $cmd >> 8),			// Верхний байт команды
+			"cmd_LOW"=> sprintf('%02X', $cmd & 0xFF),			// Нижний байт команды
+			"subto_id"=> sprintf('%02X', $subto_id),			// Sub ID получателя
+			"to_id"=> sprintf('%02X', $to_id),				// ID получателя
+			"val_HI1"=> sprintf('%02X', $value1 >> 8),		// Верхний регистр первого значения
+			"val_LOW1"=> sprintf('%02X', $value1 & 0xFF),		// Нижний регистр первого значения
+			"val_HI2"=> sprintf('%02X', $value2 >> 8),		// Верхний регистр второго значения
+			"val_LOW2"=> sprintf('%02X', $value2 & 0xFF),		// Нижний регистр второго значения
+			"val_HI3"=> sprintf('%02X', $value3 >> 8),		// Верхний регистр третьего значения
+			"val_LOW3"=> sprintf('%02X', $value3 & 0xFF),		// Нижний регистр третьего значения
+			"val_HI4"=> sprintf('%02X', $value4 >> 8),		// Верхний регистр третьего значения
+			"val_LOW4"=> sprintf('%02X', $value4 & 0xFF),		// Нижний регистр третьего значения
+			);
+
+
+		$checksum =  ($this->val_set_edit("OKBIT-UDP")[1]) + 340 +
+							hexdec($date_array['length']) + hexdec($date_array['sub_id']) + hexdec($date_array['id']) +
+							hexdec($date_array['device_HI']) + hexdec($date_array['device_LOW']) + hexdec($date_array['cmd_HI']) +
+							hexdec($date_array['cmd_LOW']) + hexdec($date_array['subto_id']) + hexdec($date_array['to_id']);
+
+		if ($cmd == 23 || $cmd == 24 ){
+			$checksum = 	$checksum + hexdec($date_array['val_HI1']) + hexdec($date_array['val_LOW1']);
+		}
+		else if ($cmd == 30) {
+			$checksum = 	$checksum + hexdec($date_array['val_HI1']) + hexdec($date_array['val_LOW1']) +
+							hexdec($date_array['val_HI2']) + hexdec($date_array['val_LOW2']);
+		}
+		else if ($cmd == 31) {
+			$checksum = 	$checksum + hexdec($date_array['val_HI1']) + hexdec($date_array['val_LOW1']) +
+							hexdec($date_array['val_HI2']) + hexdec($date_array['val_LOW2']) +
+							hexdec($date_array['val_HI3']) + hexdec($date_array['val_LOW3']);
+		}
+		else if ($cmd == 13) {
+			$checksum = 	$hecksum + hexdec($date_array['val_HI1']) + hexdec($date_array['val_LOW1']) +
+							hexdec($date_array['val_HI2']) + hexdec($date_array['val_LOW2']) +
+							hexdec($date_array['val_HI3']) + hexdec($date_array['val_LOW3']) +
+							hexdec($date_array['val_HI4']) + hexdec($date_array['val_LOW4']);
+		}
+		
+		$date_array['checksum_HI'] = sprintf('%02X', $checksum >> 8);
+		$date_array['checksum_LOW'] = sprintf('%02X', $checksum & 0xFF);
+		
+		$data_packet=NULL;
+		//собираем пакет воедино
+		$data_packet =  $date_array['title'] .
+						$date_array['s_cod'] . $date_array['length'] . $date_array['sub_id'] . $date_array['id'] .
+						$date_array['device_HI'] . $date_array['device_LOW'] . $date_array['cmd_HI'] . $date_array['cmd_LOW'] .
+						$date_array['subto_id'] . $date_array['to_id'];
+
+		if ($cmd == 23 || $cmd == 24 ){
+			$data_packet = 	$data_packet . $date_array['val_HI1']  . $date_array['val_LOW1'];
+		}
+		else if ($cmd == 30) {
+			$data_packet = 	$data_packet . $date_array['val_HI1']  . $date_array['val_LOW1'] .
+							$date_array['val_HI2'] . $date_array['val_LOW2'];
+		}
+		else if ($cmd == 31) {
+			$data_packet = 	$data_packet . $date_array['val_HI1']  . $date_array['val_LOW1'] . $date_array['val_HI2'] .
+						$date_array['val_LOW2'] . $date_array['val_HI3'] . $date_array['val_LOW3'];
+		}
+		else if ($cmd == 13) {
+			$data_packet = 	$data_packet . $date_array['val_HI1']  . $date_array['val_LOW1'] . $date_array['val_HI2'] .
+							$date_array['val_LOW2'] . $date_array['val_HI3'] . $date_array['val_LOW3'] .
+							$date_array['val_HI4'] . $date_array['val_LOW4'];
+		}
+		$data_packet = 	$data_packet . $date_array['checksum_HI'] . $date_array['checksum_LOW'];
+
+		return ($data_packet);
+	}
+
+	public function val_set_edit($val_edit=NULL){//функция преобразования строки в hex - массив, для текстовых данных
+
+		$crc = NULL;
+
+		for ($i = 0; $i < strlen($val_edit); $i++) {
+			$val_arr[$i]  = substr($val_edit, $i,1);
+		}
+
+		$data_pack = NULL;
+
+		for ($i = 0; $i <  count($val_arr); $i++) {
+			$temp = sprintf('%02X', (ord($val_arr[$i])));
+			$crc = $crc + hexdec($temp);
+			$data_pack  = $data_pack  . $temp;
+		}
+
+
+		return array($data_pack , $crc);
+	}
+	
+	
+	
+	/**
+	* okbit_sock_create 	
+	* 
+	* Создание UDP Сокета
+	*
+	* @access public
+	*/	
+	function sock_create() { //Создание udp сокета	  
+		if(!($this->sock = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP))){
+			$errorcode = socket_last_error();
+			$errormsg = socket_strerror($errorcode);
+			if ($this->config['API_LOG_DEBMES']) DebMes ("Couldn't create socket: [$errorcode] $errormsg", 'okbit');
+		} 
+		else if ($this->config['API_LOG_DEBMES']) DebMes ("Socket created", 'okbit');
+	}
+	
+	/**
+	* okbit_sock_bind 	
+	* 
+	* Привязка исходного адреса
+	*
+	* @access public
+	*/
+	function sock_bind($ip_send='0.0.0.0', $port_send) {
+	
+		if(!socket_bind($this->sock, $ip_sen, $port_send)){
+		   $errorcode = socket_last_error();
+		   $errormsg = socket_strerror($errorcode);
+		   if ($this->config['API_LOG_DEBMES']) DebMes ("Could not bind socket : [$errorcode] $errormsg", 'okbit');
+		}
+		
+		else if ($this->config['API_LOG_DEBMES']) DebMes ("Socket bind OK", 'okbit');
+	}
+	
+	/**
+	* okbit_sockSetTimeout
+	* 
+	* Установка тайм аута для отправке получения пакета, в случае если шлюз не доступен
+	*
+	* @access public
+	*/
+	function sockSetTimeout($timeout = 1) { // 
+		if (!socket_set_option($this->sock, SOL_SOCKET, SO_RCVTIMEO, array("sec" => $timeout, "usec" => 0))) {
+			$errorcode = socket_last_error();
+			$errormsg = socket_strerror($errorcode);
+			if ($this->config['API_LOG_DEBMES'])DebMes ("Error setting timeout SO_RCVTIMEO - [socket_create()] [$errorcode] $errormsg", 'okbit');
+		}			
+		else if ($this->config['API_LOG_DEBMES']) DebMes ('Timeout SO_RCVTIMEO successfully set', 'okbit');		
+	}
+	
+	
+	/**
+	* okbit_sockSetBroadcast
+	* 
+	* Установка параметров сокета в броадкаст.
+	*
+	* @access public
+	*/
+	public function sockSetBroadcast() { 
+		if (!socket_set_option($this->sock, SOL_SOCKET, SO_BROADCAST, 1)) {
+			$errorcode = socket_last_error();
+			$errormsg = socket_strerror($errorcode);
+			if ($this->config['API_LOG_DEBMES']) DebMes ("Error setting broadcast SO_BROADCAST - [socket_create()] [$errorcode] $errormsg", 'okbit');
+		} else if ($this->config['API_LOG_DEBMES']) DebMes ('Broadcast SO_BROADCAST successfully set', 'okbit');
+	}
+	
+	
+	
+	/**
+	* okbit_udp_send
+	* 
+	* Отправка сообщения на шлюз
+	*
+	* @access public
+	*/
+	function udp_send($ip_gate='255.255.255.255', $port_gate=6400, $udpPacket){				
+				 
+
+		if(!($bytes = socket_sendto($this->sock, $udpPacket, strlen($udpPacket) , 0 ,  $ip_gate,  $port_gate))){
+			$errorcode = socket_last_error();
+			$errormsg = socket_strerror($errorcode);
+			if ($this->config['API_LOG_DEBMES']) DebMes ("Cannot send data to socket [$errorcode] $errormsg", 'okbit');
+			
+		} else if ($this->config['API_LOG_DEBMES']){	
+			DebMes (">>>>> $udpPacket", 'okbit');
+			DebMes (">>>>> Sent $bytes bytes to socket", 'okbit');
+		}
+		
+			
+	
+		$buf = '';
+		$count = 0;
+	
+		while ($bytes = @socket_recvfrom($this->sock, $buf, 4096, 0, $remote_ip, $remote_port)) {
+			
+			$count += 1;
+			
+			if ($buf != '') {
+				if ($this->config['API_LOG_DEBMES']) {
+					DebMes ("$count - <<<<< Reply received from IP $remote_ip , port $remote_port", 'okbit');
+					DebMes ("<<<<< $bytes bytes received", 'okbit');
+					DebMes ("<<<<< $buf", 'okbit');
+				}
+				
+				$this->parsing_packege($buf, $remote_ip);
+
+				
+			} else {
+				$errorcode = socket_last_error();
+				$errormsg = socket_strerror($errorcode);
+				if ($this->config['API_LOG_DEBMES']) 
+				DebMes ("Error reading socket [$errorcode] $errormsg", 'okbit');
+			}
+		}
+				
+		
+		socket_shutdown($this->sock, 2);
+		socket_close($this->sock);		
+	}
+	
+	
+	/**
+	* udp_send_no_remote
+	* 
+	* Отправка сообщения на шлюз без ожтдания ответа
+	*
+	* @access public
+	*/
+	function udp_send_no_remote($ip_gate='255.255.255.255', $port_gate=6400, $udpPacket){				
+				 
+
+		if(!($bytes = socket_sendto($this->sock, $udpPacket, strlen($udpPacket) , 0 ,  $this->ip_gate,  $this->port_gate))){
+			$errorcode = socket_last_error();
+			$errormsg = socket_strerror($errorcode);
+			if ($this->config['API_LOG_DEBMES']) DebMes ("Cannot send data to socket [$errorcode] $errormsg", 'okbit');
+			
+		} else if ($this->config['API_LOG_DEBMES']){	
+			DebMes (">>>>> $udpPacket", 'okbit');
+			DebMes (">>>>> Sent $bytes bytes to socket", 'okbit');
+		}
+	
+		$buf = '';
+		$count = 0;
+	
+		socket_shutdown($this->sock, 2);
+		socket_close($this->sock);		
+	}
+	
+	
+	
+	/**
+	* parsing_packege
+	*
+	* разбор полученного пакета
+	*
+	* @access private
+	*/	
+	
+	function parsing_packege($buf_cmd, $gate_ip){
+		if ($this->config['API_LOG_DEBMES']) DebMes('<<<< ' . $buf_cmd . ' | IP - ' .  $gate_ip, 'okbit');
+
+		$arr = str_split($buf_cmd, 2);
+		$arr_count = count($arr);
+
+		$udp_package = array(// разбираем массив
+			"mes" => chr(hexdec($arr[0])) . chr(hexdec($arr[1])) . chr(hexdec($arr[2])) . chr(hexdec($arr[3])) . chr(hexdec($arr[4])) . chr(hexdec($arr[5])) .
+					chr(hexdec($arr[6])) . chr(hexdec($arr[7])) . chr(hexdec($arr[8])),
+			"s_cod" => $arr[9] . $arr[10],
+			"length" => hexdec($arr[11]),
+			"sub_id" => hexdec($arr[12]),
+			"id" => hexdec($arr[13]),
+			"device"=> hexdec($arr[14] . $arr[15]),
+			"cmd"=> hexdec($arr[16] . $arr[17]),
+			"subto_id"=> hexdec($arr[18]),
+			"to_id"=> hexdec($arr[19]),
+		);
+
+		if ($udp_package['length'] == 11 || $udp_package['length'] == 13 || $udp_package['length'] == 15 || $udp_package['length'] == 17 || $udp_package['length'] == 19) {
+			$udp_package['vol_1'] = hexdec($arr[20] . $arr[21]);
+		}
+		if ($udp_package['length'] == 13 || $udp_package['length'] == 15 || $udp_package['length'] == 17 || $udp_package['length'] == 19) {
+			$udp_package['vol_2'] = hexdec($arr[22] . $arr[23]);
+		}
+		if ($udp_package['length'] == 15 || $udp_package['length'] == 17 || $udp_package['length'] == 19) {
+			$udp_package['vol_3'] = hexdec($arr[24] . $arr[25]);
+		}
+		if ($udp_package['length'] == 17 || $udp_package['length'] == 19) {
+			$udp_package['vol_4'] = hexdec($arr[26] . $arr[27]);
+		}
+		if ($udp_package['length'] == 19) {
+			$udp_package['vol_5'] = hexdec($arr[28] . $arr[29]);
+		}
+		
+	
+		$check_in = 0;
+		for ($i = 0; $i < $arr_count - 2; $i++){ // считаем чек сум полученного пакета
+			$check_in = $check_in + hexdec($arr[$i]);
+		}
+		if ($check_in == hexdec($arr[$arr_count - 2] . $arr[$arr_count - 1])){ //если чек сум правельный производим дальнейшию обработку
+			
+			
+			//Дальнейшие действия в зависимости от пришедшей команды в запросе (см. список команд  в udp_send.php)
+			if ($udp_package['cmd'] == 30){ //запуск функции присвоения значениея свойства объекта
+				
+				$cmd_gate = SQLSelectOne("SELECT * FROM `okbit_gate` WHERE IP='".DBSafe($gate_ip)."'");
+								
+				$cmd_gate['STATUS'] = 1;
+				$cmd_gate['UPDATED'] = date('Y-m-d H:i:s');
+				SQLUpdate('okbit_gate', $cmd_gate);
+				
+				if($cmd_gate['MOD'] == '6000'){				
+					$cmd_devices = SQLSelectOne("SELECT * FROM `okbit_devices` WHERE PARENT_ID='".(int)$cmd_gate['ID']."' AND SUB_ID='".(int)$udp_package['subto_id']. "' AND DEVICE_ID='".(int)$udp_package['to_id']. "'");
+					
+
+					
+					
+					if ($cmd_devices){
+						$cmd_devices['STATUS'] = 1;
+						$cmd_devices['UPDATED'] = date('Y-m-d H:i:s');
+						SQLUpdate('okbit_devices', $cmd_devices);
+					
+					
+					
+						if ($cmd_devices['DEVICE'] == 6001){
+							$cmd_dev = explode(',',DATA_6001);
+						}
+						else if ($cmd_devices['DEVICE'] == 6002){
+							$cmd_dev = explode(',',DATA_6002);
+						}
+						else if ($cmd_devices['DEVICE'] == 6003){
+							$cmd_dev = explode(',',DATA_6003);
+						}
+						else if ($cmd_devices['DEVICE'] == 6004){
+							$cmd_dev = explode(',',DATA_6004);
+						}
+						else if ($cmd_devices['DEVICE'] == 6005){
+							$cmd_dev = explode(',',DATA_6005);
+						}
+						else if ($cmd_devices['DEVICE'] == 6006){
+							$cmd_dev = explode(',',DATA_6006);
+						}
+						else if ($cmd_devices['DEVICE'] == 6007){
+							$cmd_dev = explode(',',DATA_6007);
+						}
+						else if ($cmd_devices['DEVICE'] == 6008){
+							$cmd_dev = explode(',',DATA_6008);
+						}					
+						$com_reg = $cmd_dev[$udp_package['vol_1'] - 1]; //вычисляем топик okbit_date по номмеру регистра
+						
+						$this->processCommand($cmd_gate['MOD'],$cmd_devices['ID'], $com_reg, $udp_package['vol_2']);//передаем данные на присвоение 
+					}	
+					if ($this->config['API_LOG_DEBMES'])DebMes('UDP parsing: GATE - '. $cmd_gate['MOD'] .'  DEVICE_ID - '. $cmd_devices['ID']. ' REG - ' .$com_reg. ' VOL - ' .$udp_package['vol_2'], 'okbit');
+				}
+				
+				else if ($udp_package['sub_id'] =='0' && $udp_package['id'] =='0' && $udp_package['subto_id'] =='0' && $udp_package['to_id'] =='0'){ 
+				
+					if ($cmd_gate['MOD'] == 7001){
+						$cmd_dev = explode(',',DATA_7001);
+					}
+					else if ($cmd_gate['MOD'] == 7002){
+						$cmd_dev = explode(',',DATA_7002);
+					}
+					else if ($cmd_gate['MOD'] == 7003){
+						$cmd_dev = explode(',',DATA_7003);
+					}
+					else if ($cmd_gate['MOD'] == 7004){
+						$cmd_dev = explode(',',DATA_7004);
+					}
+					else if ($cmd_gate['MOD'] == 7005){
+						$cmd_dev = explode(',',DATA_7005);
+					}
+					else if ($cmd_gate['MOD'] == 7006){
+						$cmd_dev = explode(',',DATA_7006);
+					}
+					else if ($cmd_gate['MOD'] == 7007){
+						$cmd_dev = explode(',',DATA_7007);
+					}
+					else if ($cmd_gate['MOD'] == 7008){
+						$cmd_dev = explode(',',DATA_7008);
+					}					
+					$com_reg = $cmd_dev[$udp_package['vol_1'] - 1]; //вычисляем топик okbit_date по номмеру регистра
+					
+					$this->processCommand($cmd_gate['MOD'], $cmd_gate['ID'], $com_reg, $udp_package['vol_2']);//передаем данные на присвоение 
+					
+					
+					if ($this->config['API_LOG_DEBMES'])DebMes('UDP parsing: GATE - '. $cmd_gate['MOD'] . ' ID - '. $cmd_gate['ID'] . ' REG - ' .$com_reg. ' VOL - ' .$udp_package['vol_2'], 'okbit');
+				}
+			}
+
+			else if ($udp_package['cmd'] == 13){ // Получение серийного номера шлюза и версии прошивки
+				if ($this->config['API_LOG_DEBMES']) {
+					if ($this->config['API_LOG_DEBMES'])DebMes(date("H:i:s") . " запуск функции обработки информации о шлюзе",'okbit');
+				}
+				if ($this->config['API_LOG_DEBMES']) {
+					if ($this->config['API_LOG_DEBMES'])DebMes(date("H:i:s") . ' VER: ' . $udp_package['vol_1'] . '.' . $udp_package['vol_2'] . ' SN: ' . $udp_package['vol_3'] . sprintf("%05d", $udp_package['vol_4']), 'okbit');
+				}
+
+				$table_name = 'okbit_gate';
+				$rec = SQLSelectOne("SELECT * FROM $table_name WHERE SN='".DBSafe(sprintf("%04X", $udp_package['vol_3']) . sprintf("%04X", $udp_package['vol_4']))."'");
+				
+				$rec['STATUS'] = 1;
+				$rec['UPDATED'] = date('Y-m-d H:i:s');
+				$rec['VER'] = $udp_package['vol_1'] . '.' . $udp_package['vol_2'];
+				
+	
+				
+				if ($rec['SN']) {
+					$rec['IP'] = $gate_ip;
+					$rec['SN'] = sprintf("%04X", $udp_package['vol_3']) . sprintf("%04X", $udp_package['vol_4']);
+					if ($this->config['API_LOG_DEBMES']) DebMes('Auto params for gate ' . $deb_title . ' with IP ' . $rec['IP'], 'okbit');
+					$rec['SN'] = SQLUpdate($table_name, $rec);
+				}
+
+				else {
+					$rec = SQLSelectOne("SELECT * FROM $table_name WHERE IP='".DBSafe($gate_ip)."'");
+					$rec['STATUS'] = 1;
+					$rec['UPDATED'] = date('Y-m-d H:i:s');
+					$rec['VER'] = $udp_package['vol_1'] . '.' . $udp_package['vol_2'];
+					if ($rec['IP'] && $rec['SN'] == '' && $rec['MOD'] == $udp_package['device']) {
+						$rec['SN'] = sprintf("%04X", $udp_package['vol_3']) . sprintf("%04X", $udp_package['vol_4']);
+						$rec['IP'] = SQLUpdate($table_name, $rec);
+					}
+					else {
+						$rec = null;
+						$rec['STATUS'] = 1;
+						$rec['UPDATED'] = date('Y-m-d H:i:s');
+						$rec['VER'] = $udp_package['vol_1'] . '.' . $udp_package['vol_2'];
+						$rec['IP'] = $gate_ip;
+						$rec['MOD'] = $udp_package['device'];
+						//$rec['SN'] = $udp_package['vol_3'] . sprintf("%05d", $udp_package['vol_4']);
+						$rec['SN'] = sprintf("%04X", $udp_package['vol_3']) . sprintf("%04X", $udp_package['vol_4']);
+						SQLInsert($table_name, $rec);
+						
+						if ($rec['MOD'] =='6000'){						
+							if ($this->config['API_LOG_DEBMES']) DebMes('Auto add new gate ' . $deb_title . ' with IP ' . $rec['IP'], 'okbit');
+						}
+						else {
+							
+							$rec = SQLSelectOne("SELECT * FROM $table_name WHERE SN='".DBSafe($rec['SN'])."'");
+							
+							if ($rec['MOD'] == 7001){
+								$cmd_dev = explode(',',DATA_7001);
+							}
+							else if ($rec['MOD'] == 7002){
+								$cmd_dev = explode(',',DATA_7002);
+							}
+							else if ($rec['MOD'] == 7003){
+								$cmd_dev = explode(',',DATA_7003);
+							}
+							else if ($rec['MOD'] == 7004){
+								$cmd_dev = explode(',',DATA_7004);
+							}
+							else if ($rec['MOD'] == 7005){
+								$cmd_dev = explode(',',DATA_7005);
+							}
+							else if ($rec['MOD'] == 7006){
+								$cmd_dev = explode(',',DATA_7006);
+							}
+							else if ($rec['MOD'] == 7007){
+								$cmd_dev = explode(',',DATA_7007);
+							}
+							else if ($rec['MOD'] == 7008){
+								$cmd_dev = explode(',',DATA_7008);
+							}	
+							
+							foreach($cmd_dev as $cmd) {
+								$cmd_rec = array();
+								$cmd_rec['TITLE'] = $cmd;
+								$cmd_rec['ETHERNET'] = 1;
+								$cmd_rec['DEVICE_ID'] = $rec['ID'];
+								SQLInsert('okbit_data', $cmd_rec);								
+							}	
+							
+							if ($this->config['API_LOG_DEBMES']) DebMes('Auto add new modul_'. $rec['MOD'].' DEVICE_ID '.$rec['ID'].' with IP ' . $rec['IP'], 'okbit');
+						}
+					}
+				}
+			}
+			return "UDP parsing OK, Count - " . $arr_count . " Checksum - " . $check_in . " Checksum  HEX - " . $arr[$arr_count - 2] . $arr[$arr_count - 1].  " Checksum flag - Yes" ;
+		}
+		else return "EROR"; //если чек сумм не соответсвует, пакет битый функция вернет ошибку
+		
+		
+	}
+	
+	
+	
+	/**
+	* processCommand
+	*
+	* Присвоение значения свойст в зависимости от полученного пакета от шлюза
+	*
+	* @access private
+	*/
+	
+	function processCommand($mod, $device_id, $command, $value = 0, $params = 0) {
+		
+		if($mod == '6000'){
+			$cmd_rec = SQLSelectOne("SELECT * FROM `okbit_data` WHERE DEVICE_ID=".(int)$device_id." AND TITLE LIKE '".DBSafe($command)."' AND ETHERNET='0'");
+		}
+		else $cmd_rec = SQLSelectOne("SELECT * FROM `okbit_data` WHERE DEVICE_ID=".(int)$device_id." AND TITLE LIKE '".DBSafe($command)."' AND ETHERNET='1'");
+			
+			
+		if ($cmd_rec['ID']) {
+			if ($mod == '7002') {
+				$value = ($value / 100);				
+			}
+			
+			if ($mod == '7007' && ($command == 'Temp' || $command == 'SetTemp' || $command == 'Hysteresis') ) {
+				$value = ($value / 100);				
+			}
+							
+			$cmd_rec['VALUE'] = $value;
+			
+			$cmd_rec['UPDATED'] = date('Y-m-d H:i:s');
+			SQLUpdate('okbit_data', $cmd_rec);
+
+			if ($cmd_rec['LINKED_OBJECT'] && $cmd_rec['LINKED_PROPERTY']) {
+				
+				setGlobal($cmd_rec['LINKED_OBJECT'] . '.' . $cmd_rec['LINKED_PROPERTY'], $value, array(okbit => '0'));
+			}
+				
+			if ($cmd_rec['LINKED_OBJECT'] && $cmd_rec['LINKED_METHOD']) {
+				if (!is_array($params)) {
+					$params = array();
+				}
+				$params['VALUE'] = $value;
+				callMethodSafe($cmd_rec['LINKED_OBJECT'] . '.' . $cmd_rec['LINKED_METHOD'], $params);
+			}
+		}
+
 	}
 	
 	
