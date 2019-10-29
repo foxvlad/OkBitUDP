@@ -1,4 +1,4 @@
-<!-- Table gate_okbit edit -->
+<!-- Table 'miio_devices' edit -->
 <form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
 	[#if OK#]
 	<div class="alert alert-success"><#LANG_DATA_SAVED#></div>
@@ -10,17 +10,12 @@
 	
 	<fieldset>
 		[#if ID=""#]
-		<legend><#LANG_OKBIT_APP_ADD_GATE#></legend>
+		<legend>Добавить шлюз</legend>
 		
 		[#else ID#]
-			[#if MOD=="6000"#]
-				<legend><#TITLE#></legend> 
-			[#endif MOD#]
+		<legend><#TITLE#></legend>
+		
 		[#endif ID#]
-		
-		
-		
-		
 
 		<div class="form-group">
 			<label class="col-lg-3 control-label" style="font-weight:bold">
@@ -35,34 +30,8 @@
 			</label>
 			<div class="col-lg-4"><input type="text" class="form-control" name="ip" value="[#IP#]" id="ip"></div>
 		</div>
-		
-		<div class="form-group">
-			<label class="col-lg-3 control-label"[#if ERR_MOD#] style="color:red;font-weight:bold"[#endif#]>
-				<#LANG_TYPE#> (*):
-			</label>
-			<div class="col-lg-4">
-				<select name="mod" class="form-control">
-					<option value=""></option>
-					<option value="6000" [#if MOD="6000"#] selected[#endif#]>GATE UDP-RS485</option>
-					<option value="7001" [#if MOD="7001"#] selected[#endif#]>ESP Lamp</option>
-					<option value="7002" [#if MOD="7002"#] selected[#endif#]>ESP Climatic</option>
-					<option value="7003" [#if MOD="7003"#] selected[#endif#]>ESP Rele</option>
-					<option value="7004" [#if MOD="7004"#] selected[#endif#]>ESP LED RGB</option>
-					<option value="7005" [#if MOD="7005"#] selected[#endif#]>ESP Dimmer</option>
-					<option value="7006" [#if MOD="7006"#] selected[#endif#]>ESP Sensor</option>
-					<option value="7007" [#if MOD="7007"#] selected[#endif#]>ESP Thermostat</option>
 
-				</select>
-			</div>
-		</div>
 		
-		<div class="form-group">
-			<label class="col-lg-3 control-label"[#if ERR_IP#] style="color:red;font-weight:bold"[#endif#]>
-				SN:
-			</label>
-			<div class="col-lg-4" style="font-weight:bold" >[#SN#]</div>
-		</div>
-
 		
 		<div class="form-group">
 			<div class="col-lg-offset-3 col-lg-4">
@@ -82,6 +51,3 @@
 		</div>
 	</fieldset>
 </form>
-
-
-<!-- / Table gate_okbit edit -->

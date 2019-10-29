@@ -131,6 +131,21 @@
 			&nbsp;<br/>
 		[#endif ID && MOD#]
 		
+		
+		[#if MOD="6000"#]
+				<ul class="nav nav-tabs">
+					<li[#if TAB=""#] class="active"[#endif#]>
+						<a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab="><#LANG_GENERAL#></a>
+					</li>
+					<li[#if TAB="data_else"#] class="active"[#endif#]>
+						<a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=data_else">Настройки шлюза</a>				
+					</li>
+				</ul>
+				&nbsp;<br/>
+				[#endif MOD#]
+		
+		
+		
 		[#if TAB=""#]
 			[#inc okbit_gate_edit.html#]
 		[#endif TAB#]

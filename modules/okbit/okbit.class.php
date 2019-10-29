@@ -9,6 +9,49 @@
 */
 
 
+
+	/**
+	* udp_msg_packet(
+	* 
+	* @access public
+	*
+	* -------- Значение команд в десятичном/шестнадцатиричном формате ---------
+	* 
+	* 0010/A - считать SN шлюза, версию прощивки
+	* 0011/B - ответ все хорошо
+	* 0012/С - ответ ошибка (1 - колличество ошибок в ОЗУ, 2- код последней ошибки)
+	* 0013/D - передать SN шлюза, версию прощивки (1 - Значение прошивки 1, 2 - значение прошивки 2, 3 - серийный номер 1, 4 - серийный номер 2)
+	* 
+	* 0020/14 - Поиск всех онлайн устройств
+	* 0021/15 - Считать/передать тип устройства, версию прошивки (1- тип устройства, 2 - версия)
+	* 0022/16 - Считат/передать коментарий устройства(n-е количество буквенный коментарий)
+	* 0023/17 - Считать/передать статус входа (1 - адрес входа, 2- значение)
+	* 0024/18 - Считать/передать значение ячейки ОЗУ (1 - адрес ячейки, 2 - значение)
+	* 0025/19 - Считать/передать все значения ячеек ОЗУ
+	* 0026/1A - Считать/передать количество ошибок на шине ( 1- кол-воошибок)
+	* 
+	* 0030/1E - Присвоение значения ОЗУ (1 - адрес канал, 2 - значение)
+	* 0031/1F - Присвоение двух значений ОЗУ (1 - адрес канала, 2 - значение 1, 3 - значение 2)
+	* 
+	* 0040/28 - Смена Sub ID (1 - новый адрес подсети)
+	* 0041/29 - Смена ID (1 - новый адрес устройства)
+	* 
+	* 0055/37 - Запись текстового значения (примечание для модуля)
+	* 
+	* 0060/3C - Запись значения настройки в модуль (1 - адрес канала, 2 - значение )
+	* 0061/3D - Запись значений настройки в модуль (1 - адрес канала, 2 - значение 1, 3- значение 2)
+	* 0062/3D - смена IP шлюза (1 - адрес, 2 - адрес, 3 - адрес, 4 - адрес)
+	* 0063/3F - Работа шлюза по DHCP
+	* 0064/40 - Привязать шлюз к серверу
+	* 
+	* 
+	* 0070/46 - Запись значения сценария (1 - адрес канала,  2 - N -сценария, 3 - Sub ID получателя, 4 - id получателя , 5 - адрес канала ОЗУ,
+	* 			6 - значение 1, 7 - значение 2)
+	*255/FF - поиск всех Шлюзов и ethernet устройств по широковещательному запросу
+	**/
+
+
+
 define ('OKBIT_GATE_CODES', serialize (array(	'6000' =>	'GATE Ethernet-RS485',
 												'7001' =>	'ESP Lamp',
 												'7002' =>	'ESP Climatic',
@@ -20,11 +63,11 @@ define ('OKBIT_GATE_CODES', serialize (array(	'6000' =>	'GATE Ethernet-RS485',
 												)));
 
 
-define ('OKBIT_DEVICES_CODES', serialize (array('6001' =>	'LCM-8',
-												'6002' => 	'SAM',
-												'6003' => 	'UAM-8',
-												'6004' => 	'HVDM-4',
-												'6005' => 	'LDM-6',
+define ('OKBIT_DEVICES_CODES', serialize (array('6001' =>	'МУС-8',
+												'6002' => 	'МОС-6',
+												'6003' => 	'УМА-8',
+												'6004' => 	'МДВ-4',
+												'6005' => 	'МДН-6',
 												'6007' => 	'IRM',
 												'6008' => 	'FAM-6'
 												)));
@@ -368,7 +411,7 @@ class okbit extends module {
 		else $ip_serv = '0.0.0.0';
 		$gate_sh = SQLSelectOne("SELECT * FROM `okbit_gate` WHERE ID='".$id."'");//запрос для получения IP шлюза	
 	
-		$data_send = $this->udp_msg_packet($this->config['API_LOG_DEBMES'],0, 0, 65534, 20, 0, 0); //сборка UDP OkBit пакета		
+		$data_send = $this->udp_msg_packet($this->config['API_LOG_DEBMES'],0, 0, 65534, 10, 0, 0); //сборка UDP OkBit пакета		
 		$this->sock_create(); //Создание UDP сокета
 		$this->sockSetTimeout(1); //Установка таймаута для получения ответа
 		$this->sock_bind($ip_serv, 6600);
@@ -559,7 +602,7 @@ class okbit extends module {
 		global $session;
 		if ($this->owner->name == 'panel') {
 			$out['CONTROLPANEL'] = 1;		
-		}			
+		}
 		$out['PARENT_TITLE'] =  $parent_title;
 		$out['PARENT_ID'] =  $parent_id;		
 		$device_code = unserialize(OKBIT_DEVICES_CODES);		
@@ -652,45 +695,7 @@ class okbit extends module {
 	
 	
 	
-	/**
-	* udp_msg_packet(
-	* 
-	* @access public
-	*
-	* -------- Значение команд в десятичном/шестнадцатиричном формате ---------
-	* 
-	* 0010/A - считать SN шлюза, версию прощивки
-	* 0011/B - ответ все хорошо
-	* 0012/С - ответ ошибка (1 - колличество ошибок в ОЗУ, 2- код последней ошибки)
-	* 0013/D - передать SN шлюза, версию прощивки (1 - Значение прошивки 1, 2 - значение прошивки 2, 3 - серийный номер 1, 4 - серийный номер 2)
-	* 
-	* 0020/14 - Поиск всех онлайн устройств
-	* 0021/15 - Считать/передать тип устройства, версию прошивки (1- тип устройства, 2 - версия)
-	* 0022/16 - Считат/передать коментарий устройства(n-е количество буквенный коментарий)
-	* 0023/17 - Считать/передать статус входа (1 - адрес входа, 2- значение)
-	* 0024/18 - Считать/передать значение ячейки ОЗУ (1 - адрес ячейки, 2 - значение)
-	* 0025/19 - Считать/передать все значения ячеек ОЗУ
-	* 0026/1A - Считать/передать количество ошибок на шине ( 1- кол-воошибок)
-	* 
-	* 0030/1E - Присвоение значения ОЗУ (1 - адрес канал, 2 - значение)
-	* 0031/1F - Присвоение двух значений ОЗУ (1 - адрес канала, 2 - значение 1, 3 - значение 2)
-	* 
-	* 0040/28 - Смена Sub ID (1 - новый адрес подсети)
-	* 0041/29 - Смена ID (1 - новый адрес устройства)
-	* 
-	* 0055/37 - Запись текстового значения (примечание для модуля)
-	* 
-	* 0060/3C - Запись значения настройки в модуль (1 - адрес канала, 2 - значение )
-	* 0061/3D - Запись значений настройки в модуль (1 - адрес канала, 2 - значение 1, 3- значение 2)
-	* 0062/3D - смена IP шлюза (1 - адрес, 2 - адрес, 3 - адрес, 4 - адрес)
-	* 0063/3F - Работа шлюза по DHCP
-	* 0064/40 - Привязать шлюз к серверу
-	* 
-	* 
-	* 0070/46 - Запись значения сценария (1 - адрес канала,  2 - N -сценария, 3 - Sub ID получателя, 4 - id получателя , 5 - адрес канала ОЗУ,
-	* 			6 - значение 1, 7 - значение 2)
-	*/
-
+	
 	
 
 
@@ -710,6 +715,9 @@ class okbit extends module {
 		else if ($cmd == 13) { // Присвоение двух значений ОЗУ, передается три параметра: адрес канала ОЗУ, значение 1, значение 2)
 			$length = 17;
 		}
+		
+		//4F4B4249542D554450AAAA090000FFFE0014000005FD
+		
 		$date_array = array(   // Собираем массив данных для строки UDP -запроса
 			"title"=>$this->val_set_edit("OKBIT-UDP")[0], 			// Текствое собщение протокола
 			"s_cod" => sprintf('%02X', 0xAAAA),            			// Стартовый ярлык
@@ -934,7 +942,7 @@ class okbit extends module {
 	/**
 	* udp_send_no_remote
 	* 
-	* Отправка сообщения на шлюз без ожтдания ответа
+	* Отправка сообщения на шлюз без ожидания ответа
 	*
 	* @access public
 	*/
@@ -1021,7 +1029,7 @@ class okbit extends module {
 				SQLUpdate('okbit_gate', $cmd_gate);
 				
 				if($cmd_gate['MOD'] == '6000'){				
-					$cmd_devices = SQLSelectOne("SELECT * FROM `okbit_devices` WHERE PARENT_ID='".(int)$cmd_gate['ID']."' AND SUB_ID='".(int)$udp_package['subto_id']. "' AND DEVICE_ID='".(int)$udp_package['to_id']. "'");
+					$cmd_devices = SQLSelectOne("SELECT * FROM `okbit_devices` WHERE PARENT_ID='".(int)$cmd_gate['ID']."' AND SUB_ID='".(int)$udp_package['subto_id']. "' AND DEVICE_ID='".(int)$udp_package['id']. "'");
 					
 
 					
@@ -1061,7 +1069,7 @@ class okbit extends module {
 						
 						$this->processCommand($cmd_gate['MOD'],$cmd_devices['ID'], $com_reg, $udp_package['vol_2']);//передаем данные на присвоение 
 					}	
-					if ($this->config['API_LOG_DEBMES'])DebMes('UDP parsing: GATE - '. $cmd_gate['MOD'] .'  DEVICE_ID - '. $cmd_devices['ID']. ' REG - ' .$com_reg. ' VOL - ' .$udp_package['vol_2'], 'okbit');
+					if ($this->config['API_LOG_DEBMES'])DebMes('UDP parsing: GATE - '. $cmd_gate['MOD'] .'  DEVICE_ID - '. $cmd_devices['DEVICE_ID']. ' REG - ' .$com_reg. ' VOL - ' .$udp_package['vol_2'], 'okbit');
 				}
 				
 				else if ($udp_package['sub_id'] =='0' && $udp_package['id'] =='0' && $udp_package['subto_id'] =='0' && $udp_package['to_id'] =='0'){ 
@@ -1099,94 +1107,185 @@ class okbit extends module {
 				}
 			}
 
-			else if ($udp_package['cmd'] == 13){ // Получение серийного номера шлюза и версии прошивки
+			else if ($udp_package['cmd'] == 13){ // Получение серийного номера шлюза или девайса и версии прошивки
 				if ($this->config['API_LOG_DEBMES']) {
-					if ($this->config['API_LOG_DEBMES'])DebMes(date("H:i:s") . " запуск функции обработки информации о шлюзе",'okbit');
+					if ($this->config['API_LOG_DEBMES'])DebMes(date("H:i:s") . " запуск функции обработки информации о шлюзе SUD id - ".$udp_package['sub_id'],'okbit');
 				}
 				if ($this->config['API_LOG_DEBMES']) {
 					if ($this->config['API_LOG_DEBMES'])DebMes(date("H:i:s") . ' VER: ' . $udp_package['vol_1'] . '.' . $udp_package['vol_2'] . ' SN: ' . $udp_package['vol_3'] . sprintf("%05d", $udp_package['vol_4']), 'okbit');
 				}
-
-				$table_name = 'okbit_gate';
-				$rec = SQLSelectOne("SELECT * FROM $table_name WHERE SN='".DBSafe(sprintf("%04X", $udp_package['vol_3']) . sprintf("%04X", $udp_package['vol_4']))."'");
 				
-				$rec['STATUS'] = 1;
-				$rec['UPDATED'] = date('Y-m-d H:i:s');
-				$rec['VER'] = $udp_package['vol_1'] . '.' . $udp_package['vol_2'];
+				if (in_array($udp_package['device'], array(6001, 6002, 6003, 6004, 6005, 6007, 6008))){//Обработчик девайса. При добавлении девайся, нужно указать сюда код модуля
+					if ($this->config['API_LOG_DEBMES'])DebMes('!!!Это девайс RS485!!!, MOD - '.$udp_package['device'], 'okbit');
+					
+					$table_name = 'okbit_devices';					
+					$rec = SQLSelectOne("SELECT * FROM $table_name WHERE SN='".DBSafe($udp_package['vol_3'] . sprintf("%05d", $udp_package['vol_4']))."'");
+					
 				
-	
-				
-				if ($rec['SN']) {
-					$rec['IP'] = $gate_ip;
-					$rec['SN'] = sprintf("%04X", $udp_package['vol_3']) . sprintf("%04X", $udp_package['vol_4']);
-					if ($this->config['API_LOG_DEBMES']) DebMes('Auto params for gate ' . $deb_title . ' with IP ' . $rec['IP'], 'okbit');
-					$rec['SN'] = SQLUpdate($table_name, $rec);
-				}
-
-				else {
-					$rec = SQLSelectOne("SELECT * FROM $table_name WHERE IP='".DBSafe($gate_ip)."'");
 					$rec['STATUS'] = 1;
 					$rec['UPDATED'] = date('Y-m-d H:i:s');
 					$rec['VER'] = $udp_package['vol_1'] . '.' . $udp_package['vol_2'];
-					if ($rec['IP'] && $rec['SN'] == '' && $rec['MOD'] == $udp_package['device']) {
-						$rec['SN'] = sprintf("%04X", $udp_package['vol_3']) . sprintf("%04X", $udp_package['vol_4']);
-						$rec['IP'] = SQLUpdate($table_name, $rec);
+					
+					$table_name_ip = 'okbit_gate';
+					
+					$rec_gate_ip = SQLSelectOne("SELECT * FROM $table_name_ip WHERE IP='".DBSafe($gate_ip)."'");
+					if ($this->config['API_LOG_DEBMES'])DebMes('ID Шлюза в базе, для данного девайса - '.$rec_gate_ip['ID'], 'okbit');
+					
+					if ($rec['SN']) {
+						$rec['DEVICE_ID'] = $udp_package['id'];
+						$rec['SN'] = $udp_package['vol_3'] . sprintf("%05d", $udp_package['vol_4']);
+						$rec['VER'] = $udp_package['vol_1'] . '.' . $udp_package['vol_2'];
+						if ($this->config['API_LOG_DEBMES']) DebMes('Auto params for device ' , 'okbit');
+						$rec['SN'] = SQLUpdate($table_name, $rec);
 					}
+
 					else {
 						$rec = null;
 						$rec['STATUS'] = 1;
+						$rec['UPDATED'] = date('Y-m-d H:i:s');	
+						$rec['PARENT_ID'] = $rec_gate_ip['ID'];
+						$rec['SUB_ID'] = $udp_package['sub_id'];
+						$rec['DEVICE_ID'] = $udp_package['id'];
+						$rec['DEVICE'] = $udp_package['device'];
+						$rec['VER'] = $udp_package['vol_1'] . '.' . $udp_package['vol_2'];
+						$rec['SN'] = $udp_package['vol_3'] . sprintf("%05d", $udp_package['vol_4']);
+						$rec['ID'] = SQLInsert($table_name, $rec);													
+						if ($this->config['API_LOG_DEBMES']) DebMes('Add devices' , 'okbit');
+						
+						if ($udp_package['device'] == 6001){
+							$cmd_dev = explode(',',DATA_6001);
+						}
+						else if ($udp_package['device'] == 6002){
+							$cmd_dev = explode(',',DATA_6002);
+						}
+						else if ($udp_package['device'] == 6003){
+							$cmd_dev = explode(',',DATA_6003);
+						}
+						else if ($udp_package['device'] == 6004){
+							$cmd_dev = explode(',',DATA_6004);
+						}
+						else if ($udp_package['device'] == 6005){
+							$cmd_dev = explode(',',DATA_6005);
+						}
+						else if ($udp_package['device'] == 6006){
+							$cmd_dev = explode(',',DATA_6006);
+						}
+						else if ($udp_package['device'] == 6007){
+							$cmd_dev = explode(',',DATA_6007);
+						}
+						else if ($udp_package['device'] == 6008){
+							$cmd_dev = explode(',',DATA_6008);
+						}
+
+						foreach($cmd_dev as $cmd) {
+							
+									$cmd_rec = array();
+									$cmd_rec['TITLE'] = $cmd;
+									$cmd_rec['ETHERNET'] = 0;
+									$cmd_rec['DEVICE_ID'] = $rec['ID'];
+									SQLInsert('okbit_data', $cmd_rec);								
+						}
+						
+						
+					}
+					
+					
+				}
+				
+				else {//Обработчик Шлюзов.
+					$table_name = 'okbit_gate';
+					if ($this->config['API_LOG_DEBMES'])DebMes('!!!Это TCP/IP устройство!!!, MOD - '.$udp_package['device'], 'okbit');
+					
+					
+					$rec = SQLSelectOne("SELECT * FROM $table_name WHERE SN='".DBSafe($udp_package['vol_3'] . sprintf("%05d", $udp_package['vol_4']))."'");
+				
+					$rec['STATUS'] = 1;
+					$rec['UPDATED'] = date('Y-m-d H:i:s');
+					$rec['VER'] = $udp_package['vol_1'] . '.' . $udp_package['vol_2'];
+					
+		
+					
+					if ($rec['SN']) {
+						$rec['IP'] = $gate_ip;
+						$rec['SN'] = $udp_package['vol_3'] . sprintf("%05d", $udp_package['vol_4']);
+						if ($this->config['API_LOG_DEBMES']) DebMes('Auto params for gate ' . $deb_title . ' with IP ' . $rec['IP'], 'okbit');
+						$rec['SN'] = SQLUpdate($table_name, $rec);
+					}
+
+					else {
+						$rec = SQLSelectOne("SELECT * FROM $table_name WHERE IP='".DBSafe($gate_ip)."'");
+						$rec['STATUS'] = 1;
 						$rec['UPDATED'] = date('Y-m-d H:i:s');
 						$rec['VER'] = $udp_package['vol_1'] . '.' . $udp_package['vol_2'];
-						$rec['IP'] = $gate_ip;
-						$rec['MOD'] = $udp_package['device'];
-						//$rec['SN'] = $udp_package['vol_3'] . sprintf("%05d", $udp_package['vol_4']);
-						$rec['SN'] = sprintf("%04X", $udp_package['vol_3']) . sprintf("%04X", $udp_package['vol_4']);
-						SQLInsert($table_name, $rec);
-						
-						if ($rec['MOD'] =='6000'){						
-							if ($this->config['API_LOG_DEBMES']) DebMes('Auto add new gate ' . $deb_title . ' with IP ' . $rec['IP'], 'okbit');
+						if ($rec['IP'] && $rec['SN'] == '' && $rec['MOD'] == $udp_package['device']) {
+							$rec['SN'] = $udp_package['vol_3'] . sprintf("%05d", $udp_package['vol_4']);
+							$rec['IP'] = SQLUpdate($table_name, $rec);
 						}
 						else {
+							$rec = null;
+							$rec['STATUS'] = 1;
+							$rec['UPDATED'] = date('Y-m-d H:i:s');
+							$rec['VER'] = $udp_package['vol_1'] . '.' . $udp_package['vol_2'];
+							$rec['IP'] = $gate_ip;
+							$rec['SUB_ID'] = $udp_package['sub_id'];
+							$rec['MOD'] = $udp_package['device'];
+							//$rec['SN'] = $udp_package['vol_3'] . sprintf("%05d", $udp_package['vol_4']);
+							//$rec['SN'] = sprintf("%04X", $udp_package['vol_3']) . sprintf("%04X", $udp_package['vol_4']);
+							$rec['SN'] = $udp_package['vol_3'] . sprintf("%05d", $udp_package['vol_4']);
+							SQLInsert($table_name, $rec);
 							
-							$rec = SQLSelectOne("SELECT * FROM $table_name WHERE SN='".DBSafe($rec['SN'])."'");
-							
-							if ($rec['MOD'] == 7001){
-								$cmd_dev = explode(',',DATA_7001);
+							if ($rec['MOD'] =='6000'){						
+								if ($this->config['API_LOG_DEBMES']) DebMes('Auto add new gate ' . $deb_title . ' with IP ' . $rec['IP'], 'okbit');
 							}
-							else if ($rec['MOD'] == 7002){
-								$cmd_dev = explode(',',DATA_7002);
+							else {
+								
+								$rec = SQLSelectOne("SELECT * FROM $table_name WHERE SN='".DBSafe($rec['SN'])."'");
+								
+								if ($rec['MOD'] == 7001){
+									$cmd_dev = explode(',',DATA_7001);
+								}
+								else if ($rec['MOD'] == 7002){
+									$cmd_dev = explode(',',DATA_7002);
+								}
+								else if ($rec['MOD'] == 7003){
+									$cmd_dev = explode(',',DATA_7003);
+								}
+								else if ($rec['MOD'] == 7004){
+									$cmd_dev = explode(',',DATA_7004);
+								}
+								else if ($rec['MOD'] == 7005){
+									$cmd_dev = explode(',',DATA_7005);
+								}
+								else if ($rec['MOD'] == 7006){
+									$cmd_dev = explode(',',DATA_7006);
+								}
+								else if ($rec['MOD'] == 7007){
+									$cmd_dev = explode(',',DATA_7007);
+								}
+								else if ($rec['MOD'] == 7008){
+									$cmd_dev = explode(',',DATA_7008);
+								}	
+								
+								foreach($cmd_dev as $cmd) {
+									$cmd_rec = array();
+									$cmd_rec['TITLE'] = $cmd;
+									$cmd_rec['ETHERNET'] = 1;
+									$cmd_rec['DEVICE_ID'] = $rec['ID'];
+									SQLInsert('okbit_data', $cmd_rec);								
+								}	
+								
+								if ($this->config['API_LOG_DEBMES']) DebMes('Auto add new modul_'. $rec['MOD'].' DEVICE_ID '.$rec['ID'].' with IP ' . $rec['IP'], 'okbit');
 							}
-							else if ($rec['MOD'] == 7003){
-								$cmd_dev = explode(',',DATA_7003);
-							}
-							else if ($rec['MOD'] == 7004){
-								$cmd_dev = explode(',',DATA_7004);
-							}
-							else if ($rec['MOD'] == 7005){
-								$cmd_dev = explode(',',DATA_7005);
-							}
-							else if ($rec['MOD'] == 7006){
-								$cmd_dev = explode(',',DATA_7006);
-							}
-							else if ($rec['MOD'] == 7007){
-								$cmd_dev = explode(',',DATA_7007);
-							}
-							else if ($rec['MOD'] == 7008){
-								$cmd_dev = explode(',',DATA_7008);
-							}	
-							
-							foreach($cmd_dev as $cmd) {
-								$cmd_rec = array();
-								$cmd_rec['TITLE'] = $cmd;
-								$cmd_rec['ETHERNET'] = 1;
-								$cmd_rec['DEVICE_ID'] = $rec['ID'];
-								SQLInsert('okbit_data', $cmd_rec);								
-							}	
-							
-							if ($this->config['API_LOG_DEBMES']) DebMes('Auto add new modul_'. $rec['MOD'].' DEVICE_ID '.$rec['ID'].' with IP ' . $rec['IP'], 'okbit');
 						}
 					}
+					
+					
+					
+					
+					
 				}
+				
+				
 			}
 			return "UDP parsing OK, Count - " . $arr_count . " Checksum - " . $check_in . " Checksum  HEX - " . $arr[$arr_count - 2] . $arr[$arr_count - 1].  " Checksum flag - Yes" ;
 		}
@@ -1294,6 +1393,7 @@ class okbit extends module {
 			okbit_gate: VER varchar(255) NOT NULL DEFAULT ''
 			okbit_gate: MOD varchar(255) NOT NULL DEFAULT ''
 			okbit_gate: STATUS int(2) unsigned NOT NULL DEFAULT 0
+			okbit_gate: SUB_ID int(10) unsigned NOT NULL DEFAULT 0
 			okbit_gate: IP_SERVER varchar(255) NOT NULL DEFAULT ''
 			okbit_gate: UPDATED datetime			
 			
@@ -1303,7 +1403,9 @@ class okbit extends module {
 			okbit_devices: SUB_ID int(10) unsigned NOT NULL DEFAULT 0
 			okbit_devices: DEVICE_ID int(10) unsigned NOT NULL DEFAULT 0
 			okbit_devices: DEVICE int(10) unsigned NOT NULL DEFAULT 0
+			okbit_devices: SN varchar(255) NOT NULL DEFAULT ''
 			okbit_devices: VER varchar(255) NOT NULL DEFAULT ''
+			okbit_devices: MOD varchar(255) NOT NULL DEFAULT ''
 			okbit_devices: STATUS int(2) unsigned NOT NULL DEFAULT 0
 			okbit_devices: UPDATED datetime
 

@@ -23,13 +23,13 @@ if ($this->mode == 'update') {
 		$rec['TITLE'] = $title;
 
 
-		global $sub_id;
+	/*	global $sub_id;
 		$rec['SUB_ID'] = $sub_id;
 		if ($rec['SUB_ID'] == '') {
 			$out['ERR_SUB_ID'] = 1;
 			$ok = 0;
 		}
-		
+	*/	
 		global $device_id;
 		$rec['DEVICE_ID'] = $device_id;
 		if ($rec['DEVICE_ID'] == '') {
@@ -161,10 +161,20 @@ if ($this->tab == 'data') {
 			if ($properties[$i]['TITLE'] == 'power') $properties[$i]['SDEVICE_TYPE'] = 'relay';
 			elseif ($properties[$i]['TITLE'] == 'Lamp1') $properties[$i]['SDEVICE_TYPE'] = 'relay';
 			elseif ($properties[$i]['TITLE'] == 'Lamp2') $properties[$i]['SDEVICE_TYPE'] = 'relay';
+			elseif ($properties[$i]['TITLE'] == 'Lamp3') $properties[$i]['SDEVICE_TYPE'] = 'relay';
+			elseif ($properties[$i]['TITLE'] == 'Lamp4') $properties[$i]['SDEVICE_TYPE'] = 'relay';
+			elseif ($properties[$i]['TITLE'] == 'Lamp5') $properties[$i]['SDEVICE_TYPE'] = 'relay';
+			elseif ($properties[$i]['TITLE'] == 'Lamp6') $properties[$i]['SDEVICE_TYPE'] = 'relay';
+			elseif ($properties[$i]['TITLE'] == 'Lamp7') $properties[$i]['SDEVICE_TYPE'] = 'relay';
+			elseif ($properties[$i]['TITLE'] == 'Lamp8') $properties[$i]['SDEVICE_TYPE'] = 'relay';
 			elseif ($properties[$i]['TITLE'] == 'usb_on') $properties[$i]['SDEVICE_TYPE'] = 'relay';
 			elseif ($properties[$i]['TITLE'] == 'led') $properties[$i]['SDEVICE_TYPE'] = 'relay';
 			elseif ($properties[$i]['TITLE'] == 'child_lock') $properties[$i]['SDEVICE_TYPE'] = 'relay';
 			elseif ($properties[$i]['TITLE'] == 'bright') $properties[$i]['SDEVICE_TYPE'] = 'dimmer';
+			elseif ($properties[$i]['TITLE'] == 'Level1') $properties[$i]['SDEVICE_TYPE'] = 'dimmer';
+			elseif ($properties[$i]['TITLE'] == 'Level2') $properties[$i]['SDEVICE_TYPE'] = 'dimmer';
+			elseif ($properties[$i]['TITLE'] == 'Level3') $properties[$i]['SDEVICE_TYPE'] = 'dimmer';
+			elseif ($properties[$i]['TITLE'] == 'Level4') $properties[$i]['SDEVICE_TYPE'] = 'dimmer';
 			elseif ($properties[$i]['TITLE'] == 'cct') $properties[$i]['SDEVICE_TYPE'] = 'dimmer';
 			elseif ($properties[$i]['TITLE'] == 'ct') $properties[$i]['SDEVICE_TYPE'] = 'dimmer';
 			elseif ($properties[$i]['TITLE'] == 'nl_br') $properties[$i]['SDEVICE_TYPE'] = 'dimmer';
@@ -175,6 +185,12 @@ if ($this->tab == 'data') {
 			elseif ($properties[$i]['TITLE'] == 'current') $properties[$i]['SDEVICE_TYPE'] = 'sensor_current';
 			elseif ($properties[$i]['TITLE'] == 'power_consume_rate') $properties[$i]['SDEVICE_TYPE'] = 'sensor_power';
 			elseif ($properties[$i]['TITLE'] == 'load_power') $properties[$i]['SDEVICE_TYPE'] = 'sensor_power';
+			elseif ($properties[$i]['TITLE'] == 'S1') $properties[$i]['SDEVICE_TYPE'] = 'sensor_state';
+			elseif ($properties[$i]['TITLE'] == 'S2') $properties[$i]['SDEVICE_TYPE'] = 'sensor_state';
+			elseif ($properties[$i]['TITLE'] == 'S3') $properties[$i]['SDEVICE_TYPE'] = 'sensor_state';
+			elseif ($properties[$i]['TITLE'] == 'S4') $properties[$i]['SDEVICE_TYPE'] = 'sensor_state';
+			elseif ($properties[$i]['TITLE'] == 'S5') $properties[$i]['SDEVICE_TYPE'] = 'sensor_state';
+			elseif ($properties[$i]['TITLE'] == 'S6') $properties[$i]['SDEVICE_TYPE'] = 'sensor_state';
 			elseif ($properties[$i]['TITLE'] == 'aqi') $properties[$i]['SDEVICE_TYPE'] = 'sensor_state';
 			elseif ($properties[$i]['TITLE'] == 'average_aqi') $properties[$i]['SDEVICE_TYPE'] = 'sensor_state';
 			elseif ($properties[$i]['TITLE'] == 'favorite_level') $properties[$i]['SDEVICE_TYPE'] = 'dimmer';

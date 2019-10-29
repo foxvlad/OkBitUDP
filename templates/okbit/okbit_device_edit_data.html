@@ -35,7 +35,7 @@
 						<td valign="top"><div style="width:180px"><div style="word-break:break-all">[#VALUE#]</div></div></td>
 						<td>
 						   [#if SDEVICE_TYPE!=""#]
-						   [#module name="devices" action="link" type="<#PROPERTIES.SDEVICE_TYPE#>" prefix="miio" source_table="miio_commands" source_table_id="<#PROPERTIES.ID#>" linked_object="<#PROPERTIES.LINKED_OBJECT#>"#]
+						   [#module name="devices" action="link" type="<#PROPERTIES.SDEVICE_TYPE#>" prefix="miio" source_table="okbit_data" source_table_id="<#PROPERTIES.ID#>" linked_object="<#PROPERTIES.LINKED_OBJECT#>"#]
 						   [#else#]
 						   &nbsp;
 						   [#endif#]
