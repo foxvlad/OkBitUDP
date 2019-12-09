@@ -24,7 +24,7 @@
 
 		<div class="form-group">
 			<label class="col-lg-3 control-label"[#if ERR_SUB_ID#] style="color:red;font-weight:bold"[#endif#]>
-				ID подсети(*):
+				ID подсети(*): 
 			</label>
 			<div class="col-lg-4" style="font-weight:bold">[#SUB_ID#]</div>
 		</div>
@@ -118,13 +118,14 @@
 				[#else ID#]
 				<button type="submit" name="subm" value="Add" class="btn btn-primary"><#LANG_ADD#></button>
 				[#endif ID#]
-				<a href="?data_source=okbit_device&view_mode=search_okbit_devices&parent_id=<#PARENT_ID#>&parent_title=<#PARENT_TITLE#>" class="btn btn-default "><#LANG_STRING_BACK#></a>
+				<a href="?data_source=okbit_device&view_mode=search_okbit_devices&parent_id=<#PARENT_ID#>&parent_title=<#PARENT_TITLE#>&sub_id=<#SUB_ID#>" class="btn btn-default "><#LANG_STRING_BACK#></a>
 				<input type="hidden" name="id" value="<#ID#>">
 				<input type="hidden" name="view_mode" value="<#VIEW_MODE#>">
 				<input type="hidden" name="edit_mode" value="<#EDIT_MODE#>">
 				<input type="hidden" name="mode" value="update">
 				<input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
 				<input type="hidden" name="tab" value="<#TAB#>">
+				<input type="hidden" name="$sub_id" value="111111">
 			</div>
 		</div>
 	</fieldset>

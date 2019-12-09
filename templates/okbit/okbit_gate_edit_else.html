@@ -1,0 +1,234 @@
+			<div class="alert alert-danger" role="alert">
+				<b>
+				Внимание!!! Данный раздел для опытных пользователей и инсталяторов.
+				<p></p>
+				</b>
+			</div>
+			<p>
+				<div class="float-left" style="margin-top:20px; margin-right:20px;">
+					<button class="btn btn-primary" data-toggle="modal" data-target="#set1"><span class="glyphicon glyphicon-signal icon-white"></span>&nbsp;&nbsp; Настройка сети</button>	
+					<button class="btn btn-primary" data-toggle="modal" data-target="#set2"><span class="glyphicon glyphicon-star icon-white"></span>&nbsp;&nbsp; Смемнить подсеть</button>
+					<button class="btn btn-primary" data-toggle="modal" data-target="#set3"><span class="glyphicon glyphicon-refresh icon-white"></span>&nbsp;&nbsp; Сканировать RS485</button>
+					<a href="?data_source=<#DATA_SOURCE#>" class="btn btn-default"><#LANG_STRING_BACK#></a>
+					
+				</div>
+				
+				
+				
+				<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+				
+										
+
+										<div class="form-group">
+											<label class="col-lg-3 control-label" style="font-weight:bold">
+												<#LANG_TITLE#>:
+											</label>
+											<div class="col-lg-4"><input type="text" class="form-control" name="title" value="[#TITLE#]" id="title"></div>
+										</div>
+										
+										<div class="form-group">
+											<label class="col-lg-3 control-label"[#if ERR_IP#] style="color:red;font-weight:bold"[#endif#]>
+												IP (*):
+											</label>
+											<div class="col-lg-4"><input type="text" class="form-control" name="ip" value="[#IP#]" id="ip"></div>
+										</div>
+										
+										<div class="form-group">
+											<label class="col-lg-3 control-label"[#if ERR_MOD#] style="color:red;font-weight:bold"[#endif#]>
+												<#LANG_TYPE#> (*):
+											</label>
+											<div class="col-lg-4">
+												<select name="mod" class="form-control">
+													<option value=""></option>
+													<option value="6000" [#if MOD="6000"#] selected[#endif#]>GATE UDP-RS485</option>
+													<option value="7001" [#if MOD="7001"#] selected[#endif#]>ESP Lamp</option>
+													<option value="7002" [#if MOD="7002"#] selected[#endif#]>ESP Climatic</option>
+													<option value="7003" [#if MOD="7003"#] selected[#endif#]>ESP Rele</option>
+													<option value="7004" [#if MOD="7004"#] selected[#endif#]>ESP LED RGB</option>
+													<option value="7005" [#if MOD="7005"#] selected[#endif#]>ESP Dimmer</option>
+													<option value="7006" [#if MOD="7006"#] selected[#endif#]>ESP Sensor</option>
+													<option value="7007" [#if MOD="7007"#] selected[#endif#]>ESP Thermostat</option>
+
+												</select>
+											</div>
+										</div>
+										
+										<div class="form-group">
+											<label class="col-lg-3 control-label"[#if ERR_IP#] style="color:red;font-weight:bold"[#endif#]>
+												SN:
+											</label>
+											<div class="col-lg-4" style="font-weight:bold" >[#SN#]</div>
+										</div>
+
+										
+										<div class="form-group">
+											<div class="col-lg-offset-3 col-lg-4">
+												[#if ID!=""#]
+												<button type="submit" name="subm" value="Submit" class="btn btn-primary"><#LANG_SUBMIT#></button>
+												[#else ID#]
+												<button type="submit" name="subm" value="Add" class="btn btn-primary"><#LANG_ADD#></button>
+												[#endif ID#]
+												<a href="?data_source=<#DATA_SOURCE#>" class="btn btn-default "><#LANG_STRING_BACK#></a>
+												<input type="hidden" name="id" value="<#ID#>">
+												<input type="hidden" name="view_mode" value="<#VIEW_MODE#>">
+												<input type="hidden" name="edit_mode" value="<#EDIT_MODE#>">
+												<input type="hidden" name="mode" value="update">
+												<input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
+												<input type="hidden" name="tab" value="<#TAB#>">
+											</div>
+										</div>
+									</fieldset>
+								</form>
+								
+							
+							<#ID#> <#VIEW_MODE#> <#EDIT_MODE#> <#DATA_SOURCE#> <#TAB#>
+				
+				
+		
+				
+				<div class="modal fade" id="set1" tabindex="-1" role="dialog" aria-labelledby="about1" aria-hidden="true">
+				<!-- <div id="about" class="modal hide"> -->
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+								<h4 class="modal-title">Тест настроек 1</h4>
+							</div>
+							<div class="modal-body">
+								<div class="float-right">
+									<!--<img src="../templates/okbit/img/logo.png"  width="48" height="48">-->
+									<br><br><p><b>v.0.2</b></p>
+								</div>
+								<p class="float-left">
+									
+								</p>
+								<p><br></p>
+							</div>
+							<div class="modal-footer">
+								<div class="pull-left">какой-то текст <a href="http://okbit.ru" target="_blank">foxvlad</a></div>
+								<button type="button" class="btn btn-default" data-dismiss="modal"><#LANG_OKBIT_APP_CLOSE#></button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal fade" id="set2" tabindex="-1" role="dialog" aria-labelledby="about1" aria-hidden="true">
+				<!-- <div id="about" class="modal hide"> -->
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+								<h4 class="modal-title">Тест настроек 2</h4>
+							</div>
+							<div class="modal-body">
+								
+								
+								<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+				
+										
+
+										<div class="form-group">
+											<label class="col-lg-3 control-label" style="font-weight:bold">
+												<#LANG_TITLE#>:
+											</label>
+											<div class="col-lg-4"><input type="text" class="form-control" name="title" value="[#TITLE#]" id="title"></div>
+										</div>
+										
+										<div class="form-group">
+											<label class="col-lg-3 control-label"[#if ERR_IP#] style="color:red;font-weight:bold"[#endif#]>
+												IP (*):
+											</label>
+											<div class="col-lg-4"><input type="text" class="form-control" name="ip" value="[#IP#]" id="ip"></div>
+										</div>
+										
+										<div class="form-group">
+											<label class="col-lg-3 control-label"[#if ERR_MOD#] style="color:red;font-weight:bold"[#endif#]>
+												<#LANG_TYPE#> (*):
+											</label>
+											<div class="col-lg-4">
+												<select name="mod" class="form-control">
+													<option value=""></option>
+													<option value="6000" [#if MOD="6000"#] selected[#endif#]>GATE UDP-RS485</option>
+													<option value="7001" [#if MOD="7001"#] selected[#endif#]>ESP Lamp</option>
+													<option value="7002" [#if MOD="7002"#] selected[#endif#]>ESP Climatic</option>
+													<option value="7003" [#if MOD="7003"#] selected[#endif#]>ESP Rele</option>
+													<option value="7004" [#if MOD="7004"#] selected[#endif#]>ESP LED RGB</option>
+													<option value="7005" [#if MOD="7005"#] selected[#endif#]>ESP Dimmer</option>
+													<option value="7006" [#if MOD="7006"#] selected[#endif#]>ESP Sensor</option>
+													<option value="7007" [#if MOD="7007"#] selected[#endif#]>ESP Thermostat</option>
+
+												</select>
+											</div>
+										</div>
+										
+										<div class="form-group">
+											<label class="col-lg-3 control-label"[#if ERR_IP#] style="color:red;font-weight:bold"[#endif#]>
+												SN:
+											</label>
+											<div class="col-lg-4" style="font-weight:bold" >[#SN#]</div>
+										</div>
+
+										
+										<div class="form-group">
+											<div class="col-lg-offset-3 col-lg-4">
+												[#if ID!=""#]
+												<button type="submit" name="subm" value="Submit" class="btn btn-primary"><#LANG_SUBMIT#></button>
+												[#else ID#]
+												<button type="submit" name="subm" value="Add" class="btn btn-primary"><#LANG_ADD#></button>
+												[#endif ID#]
+												<a href="?data_source=<#DATA_SOURCE#>" class="btn btn-default "><#LANG_STRING_BACK#></a>
+												<input type="hidden" name="id" value="<#ID#>">
+												<input type="hidden" name="view_mode" value="<#VIEW_MODE#>">
+												<input type="hidden" name="edit_mode" value="<#EDIT_MODE#>">
+												<input type="hidden" name="mode" value="update">
+												<input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
+												<input type="hidden" name="tab" value="<#TAB#>">
+											</div>
+										</div>
+									</fieldset>
+								</form>
+								
+								
+								
+								
+								
+								
+								
+								
+								
+							</div>
+							<div class="modal-footer">
+								<div class="pull-left">какой-то текст <a href="http://okbit.ru" target="_blank">foxvlad</a></div>
+								<button type="button" class="btn btn-default" data-dismiss="modal"><#LANG_OKBIT_APP_CLOSE#></button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal fade" id="set3" tabindex="-1" role="dialog" aria-labelledby="about1" aria-hidden="true">
+				<!-- <div id="about" class="modal hide"> -->
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+								<h4 class="modal-title">Пуйск устройс на шине RS485</h4>
+							</div>
+							<div class="modal-body">
+								
+								<div class="alert alert-danger" role="alert">
+									Внимание!!! <br>
+									Данная процедура может продолжаться долго до 5 минут.
+									Будет произведен пойск устройст на шине RS485 и считаны их данные в шлюз.
+									После чего вы сможете загрузить список устройст в модуль Majordomo
+									
+								</div>
+							</div>
+							<div class="modal-footer">
+								<a href="?data_source=okbit_service&view_mode=okbit_devices_discover&parent_title=<#TITLE#>&parent_id=<#ID#>"  onclick="return partLoad(this.href);" class="btn btn-primary"><i class="glyphicon glyphicon-search icon-white"></i> <#LANG_OKBIT_APP_FIND_GATE#></a>	
+								<button type="button" class="btn btn-default" data-dismiss="modal"><#LANG_OKBIT_APP_CLOSE#></button>
+							</div>
+						</div>
+					</div>
+				</div>		
+			</p>
+		

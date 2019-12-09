@@ -116,7 +116,7 @@
 			}			
 							 
 			//Send back the data to the client
-			socket_sendto($sock, "000B", 100 , 0 , $remote_ip , $remote_port);
+			//socket_sendto($sock, "000B", 100 , 0 , $remote_ip , $remote_port);
 			$buf = "";
 		}
 		

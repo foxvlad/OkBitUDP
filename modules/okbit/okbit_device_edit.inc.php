@@ -12,6 +12,8 @@ $table_name = 'okbit_devices';
 
 $rec = SQLSelectOne("SELECT * FROM $table_name WHERE ID='$id'");
 
+
+
 if ($this->mode == 'update') {
 
 	$this->getConfig();
@@ -23,13 +25,23 @@ if ($this->mode == 'update') {
 		$rec['TITLE'] = $title;
 
 
-	/*	global $sub_id;
+	$table_name_t = 'okbit_gate';
+	$rec2 = SQLSelectOne("SELECT * FROM $table_name_t WHERE ID='$parent_id'");
+	if ($rec2['SUB_ID'] == ''){
+		$rec['SUB_ID'] = 0;
+	}
+	else $rec['SUB_ID'] = $rec2['SUB_ID'];
+
+
+/*
+		global $sub_id;
 		$rec['SUB_ID'] = $sub_id;
 		if ($rec['SUB_ID'] == '') {
-			$out['ERR_SUB_ID'] = 1;
-			$ok = 0;
+			$rec['SUB_ID'] = 99;
 		}
-	*/	
+		
+*/
+		
 		global $device_id;
 		$rec['DEVICE_ID'] = $device_id;
 		if ($rec['DEVICE_ID'] == '') {
@@ -218,6 +230,16 @@ if ($this->tab == 'data') {
 		
 	}
 	$out['PROPERTIES'] = $properties;   
+}
+
+else {
+	$table_name_t = 'okbit_gate';
+	$rec2 = SQLSelectOne("SELECT * FROM $table_name_t WHERE ID='$parent_id'");
+	if ($rec2['SUB_ID'] == ''){
+		$rec['SUB_ID'] = 0;
+	}
+	else $rec['SUB_ID'] = $rec2['SUB_ID'];
+	
 }
 
 

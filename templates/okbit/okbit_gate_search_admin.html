@@ -41,6 +41,7 @@
 					<td class="zag">&nbsp;</td>
 					<td class="zag"><#LANG_OKBIT_GATE_IP#></td>
 					<td class="zag"><#LANG_OKBIT_MOD#></td>
+					<td class="zag">Подсеть</td>
 					<td class="zag"><#LANG_OKBIT_VER#></td>
 					<td class="zag"><#LANG_OKBIT_STATUS#></td>
 					<td class="zag">&nbsp;</td>
@@ -76,6 +77,14 @@
 						<td style="vertical-align:middle">
 							[#if GATE_NAME!=""#]
 								[#if MOD="6000"#]<b style="color:#72a145">[#endif MOD#][#GATE_NAME#][#if MOD="6000"#]</b>[#endif MOD#]
+							[#else#]
+								&nbsp;
+							[#endif#]
+						</td>
+						
+						<td style="vertical-align:middle">
+							[#if SUB_ID!=""#]
+								[#SUB_ID#]
 							[#else#]
 								&nbsp;
 							[#endif#]
