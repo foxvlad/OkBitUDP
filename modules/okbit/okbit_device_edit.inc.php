@@ -171,6 +171,10 @@ if ($this->tab == 'data') {
 		
 		if (file_exists(DIR_MODULES . 'devices/devices.class.php')) {
 			if ($properties[$i]['TITLE'] == 'power') $properties[$i]['SDEVICE_TYPE'] = 'relay';
+			elseif ($properties[$i]['TITLE'] == 'ST_RGB') $properties[$i]['SDEVICE_TYPE'] = 'relay';
+			elseif ($properties[$i]['TITLE'] == 'Red') $properties[$i]['SDEVICE_TYPE'] = 'dimmer';
+			elseif ($properties[$i]['TITLE'] == 'Green') $properties[$i]['SDEVICE_TYPE'] = 'dimmer';
+			elseif ($properties[$i]['TITLE'] == 'Blue') $properties[$i]['SDEVICE_TYPE'] = 'dimmer';
 			elseif ($properties[$i]['TITLE'] == 'Lamp1') $properties[$i]['SDEVICE_TYPE'] = 'relay';
 			elseif ($properties[$i]['TITLE'] == 'Lamp2') $properties[$i]['SDEVICE_TYPE'] = 'relay';
 			elseif ($properties[$i]['TITLE'] == 'Lamp3') $properties[$i]['SDEVICE_TYPE'] = 'relay';

@@ -84,7 +84,7 @@ define ('DATA_6008', 'IND1,IND2,IND3,IND4,INA1,INA2,INA3,INA4');
 define ('DATA_7001', 'Lamp1,Lamp2,Lamp3,Lamp4');
 define ('DATA_7002', 'Temp,Humidity');
 define ('DATA_7003', 'Reley');
-define ('DATA_7004', 'Red,Green,Blue');
+define ('DATA_7004', 'ST_RGB,Red,Green,Blue');
 define ('DATA_7005', 'Lamp,Level');
 define ('DATA_7006', 'Status1,Status1');
 define ('DATA_7007', 'ST_Relay,Mode,Temp,SetTemp,Hysteresis,Set');
@@ -1043,47 +1043,46 @@ class okbit extends module {
 				SQLUpdate('okbit_gate', $cmd_gate);
 				
 				if($cmd_gate['MOD'] == '6000'){				
-					$cmd_devices = SQLSelectOne("SELECT * FROM `okbit_devices` WHERE PARENT_ID='".(int)$cmd_gate['ID']."' AND SUB_ID='".(int)$udp_package['subto_id']. "' AND DEVICE_ID='".(int)$udp_package['id']. "'");
+					$cmd_devices = SQLSelectOne("SELECT * FROM `okbit_devices` WHERE PARENT_ID='".(int)$cmd_gate['ID']."'  AND DEVICE_ID='".(int)$udp_package['id']. "'");
 					
 
 					
 					
-					if ($cmd_devices){
+					if ($cmd_devices['ID']){												
 						$cmd_devices['STATUS'] = 1;
 						$cmd_devices['UPDATED'] = date('Y-m-d H:i:s');
 						SQLUpdate('okbit_devices', $cmd_devices);
 					
-					
-					
-						if ($cmd_devices['DEVICE'] == 6001){
+						if ($udp_package['device'] == 6001){
 							$cmd_dev = explode(',',DATA_6001);
 						}
-						else if ($cmd_devices['DEVICE'] == 6002){
+						else if ($udp_package['device'] == 6002){
 							$cmd_dev = explode(',',DATA_6002);
 						}
-						else if ($cmd_devices['DEVICE'] == 6003){
+						else if ($udp_package['device'] == 6003){
 							$cmd_dev = explode(',',DATA_6003);
 						}
-						else if ($cmd_devices['DEVICE'] == 6004){
+						else if ($udp_package['device'] == 6004){
 							$cmd_dev = explode(',',DATA_6004);
 						}
-						else if ($cmd_devices['DEVICE'] == 6005){
+						else if ($udp_package['device'] == 6005){
 							$cmd_dev = explode(',',DATA_6005);
 						}
-						else if ($cmd_devices['DEVICE'] == 6006){
+						else if ($udp_package['device'] == 6006){
 							$cmd_dev = explode(',',DATA_6006);
 						}
-						else if ($cmd_devices['DEVICE'] == 6007){
+						else if ($udp_package['device'] == 6007){
 							$cmd_dev = explode(',',DATA_6007);
 						}
-						else if ($cmd_devices['DEVICE'] == 6008){
+						else if ($udp_package['device'] == 6008){
 							$cmd_dev = explode(',',DATA_6008);
-						}					
+						}
+						
 						$com_reg = $cmd_dev[$udp_package['vol_1'] - 1]; //вычисляем топик okbit_date по номмеру регистра
 						
 						$this->processCommand($cmd_gate['MOD'],$cmd_devices['ID'], $com_reg, $udp_package['vol_2']);//передаем данные на присвоение 
 					}	
-					if ($this->config['API_LOG_DEBMES'])DebMes('UDP parsing: GATE - '. $cmd_gate['MOD'] .'  DEVICE_ID - '. $cmd_devices['DEVICE_ID']. ' REG - ' .$com_reg. ' VOL - ' .$udp_package['vol_2'], 'okbit');
+					if ($this->config['API_LOG_DEBMES'])DebMes('UDP parsing: GATE - '. $cmd_gate['MOD'] .'  DEVICE - '. $udp_package['device'].'  DEVICE_ID - '. $udp_package['id']. ' REG - ('.$udp_package['vol_1'].') ' .$com_reg. ' VOL - ' .$udp_package['vol_2'], 'okbit');
 				}
 				
 				else if ($udp_package['sub_id'] =='0' && $udp_package['id'] =='0' && $udp_package['subto_id'] =='0' && $udp_package['to_id'] =='0'){ 

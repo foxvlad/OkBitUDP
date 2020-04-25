@@ -177,6 +177,10 @@ if ($this->tab == 'data') {
 			elseif ($properties[$i]['TITLE'] == 'Humidity') $properties[$i]['SDEVICE_TYPE'] = 'sensor_humidity';	
 			elseif ($properties[$i]['TITLE'] == 'Status1') $properties[$i]['SDEVICE_TYPE'] = 'motion';	
 			elseif ($properties[$i]['TITLE'] == 'Status2') $properties[$i]['SDEVICE_TYPE'] = 'motion';
+			elseif ($properties[$i]['TITLE'] == 'ST_RGB') $properties[$i]['SDEVICE_TYPE'] = 'relay';
+			elseif ($properties[$i]['TITLE'] == 'Red') $properties[$i]['SDEVICE_TYPE'] = 'dimmer';
+			elseif ($properties[$i]['TITLE'] == 'Green') $properties[$i]['SDEVICE_TYPE'] = 'dimmer';
+			elseif ($properties[$i]['TITLE'] == 'Blue') $properties[$i]['SDEVICE_TYPE'] = 'dimmer';
 			
 			
 			/*
