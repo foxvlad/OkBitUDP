@@ -65,7 +65,7 @@ define ('OKBIT_DEVICES_CODES', serialize (array('6001' =>	'МУС-8',
 												'6002' => 	'МОС-6',
 												'6003' => 	'УМА-8',
 												'6004' => 	'МДВ-4',
-												'6005' => 	'МДН-6',
+												'6005' => 	'МДН-3',
 												'6007' => 	'IRM',
 												'6008' => 	'FAM-6'
 												)));
@@ -76,7 +76,7 @@ define ('DATA_6001', 'Lamp1,Lamp2,Lamp3,Lamp4,Lamp5,Lamp6,Lamp7,Lamp8');
 define ('DATA_6002', 'S1,S2,S3,S4,S5,S6');													
 define ('DATA_6003', 'IND1,IND2,IND3,IND4,INA1,INA2,INA3,INA4');	
 define ('DATA_6004', 'Lamp1,Level1,Lamp2,Level2,Lamp3,Level3,Lamp4,Level4');
-define ('DATA_6005', 'IND1,IND2,IND3,IND4,INA1,INA2,INA3,INA4');
+define ('DATA_6005', 'Lamp1,Level1,Level2,Level3');
 define ('DATA_6006', 'IND1,IND2,IND3,IND4,INA1,INA2,INA3,INA4');	
 define ('DATA_6007', 'IND1,IND2,IND3,IND4,INA1,INA2,INA3,INA4');
 define ('DATA_6008', 'IND1,IND2,IND3,IND4,INA1,INA2,INA3,INA4');
